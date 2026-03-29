@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Yusuf · Juz 'Amma</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Noto+Sans:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <div class="logo">
+                <h1><span class="arabic-logo">يُوسُف</span> · Juz 'Amma</h1>
+            </div>
+            <nav class="nav">
+                <a href="index.html">Home</a>
+                <a href="names.html">99 Names</a>
+                <a href="arabic.html">Learn Arabic</a>
+                <a href="juzAmma.html" class="active">Juz 'Amma</a>
+                <a href="dua-dhikr.html">Duas & Dhikr</a>
+            </nav>
+        </header>
+
+        <main id="juz-content" class="juz-content">
+            <!-- Content loaded dynamically -->
+            <div class="loading">Loading Juz 'Amma...</div>
+        </main>
+
+        <footer class="footer">
+            <p>🤲 "...and recite the Qur'an with measured recitation." — Qur'an 73:4</p>
+        </footer>
+    </div>
+
+   <!-- Scripts - Load in correct order -->
+<script src="js/juzAmmaData.js"></script>
+<script src="js/juzAmmaTranslations.js"></script>
+<script src="js/audioManager.js"></script>   <!-- ADD THIS -->
+<script src="js/juzAmma.js"></script>
+
+    <script>
+        // Initialize when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('Juz Amma page loaded');
+            console.log('Data check:');
+            console.log('- juzAmmaData:', window.juzAmmaData ? '✅ Loaded' : '❌ Missing');
+            console.log('- transliterationData:', window.transliterationData ? '✅ Loaded' : '❌ Missing');
+            console.log('- swahiliTranslations:', window.swahiliTranslations ? '✅ Loaded' : '❌ Missing');
+            
+            if (typeof initJuzAmma === 'function') {
+                initJuzAmma();
+            } else {
+                console.error('initJuzAmma function not found');
+                
+                // Fallback: Display basic surah list
+                const content = document.getElementById('juz-content');
+                if (content && window.juzAmmaData) {
+                    let html = `
+                        <div class="juz-header">
+                            <h2>Juz ‘Amma - جزء عم</h2>
+                            <p class="header-subtitle">Surahs 78-114 · The Last Chapter of the Qur'an</p>
+                        </div>
+                        <div class="surah-grid">
+                    `;
+                    
+                    window.juzAmmaData.forEach(surah => {
+                        html += `
+                            <div class="surah-card" onclick="simpleOpenSurah(${surah.id})">
+                                <div class="surah-number">${surah.surahNumber || surah.id}</div>
+                                <div class="surah-info">
+                                    <div class="surah-arabic">${surah.arabicName || surah.arabic || ''}</div>
+                                    <div class="surah-english">${surah.englishName || surah.name}</div>
+                                    <div class="surah-ayahs">${surah.ayahCount || 0} Ayahs · ${surah.revelation || 'Makki'}</div>
+                                </div>
+                            </div>
+                        `;
+                    });
+                    html += '</div>';
+                    content.innerHTML = html;
+                } else {
+                    document.getElementById('juz-content').innerHTML = `
+                        <div class="error-message">
+                            <h3>⚠️ Error Loading Juz Amma</h3>
+                            <p>Please check that all script files are loaded correctly:</p>
+                            <ul>
+                                <li>juzAmmaData.js: ${window.juzAmmaData ? '✅' : '❌'}</li>
+                                <li>juzAmmaTranslations.js: ${window.transliterationData ? '✅' : '❌'}</li>
+                                <li>juzAmma.js: ${typeof initJuzAmma === 'function' ? '✅' : '❌'}</li>
+                            </ul>
+                        </div>
+                    `;
+                }
+            }
+        });
+
+        // Simple fallback function
+        function simpleOpenSurah(id) {
+            const surah = window.juzAmmaData?.find(s => s.id === id);
+            alert(`Opening Surah ${surah?.englishName || id}\n\nFull audio and translations feature coming soon!\n\nCurrently showing: Arabic only`);
+        }
+    </script>
+
+    <script>
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('/sw.js')
+      .then(reg => console.log('✅ Service Worker registered'))
+      .catch(err => console.log('❌ Service Worker error:', err));
+  }
+</script>
+</body>
+</html>

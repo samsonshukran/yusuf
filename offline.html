@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Offline · Yusuf</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Noto+Sans:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+    <style>
+        .offline-container {
+            min-height: 80vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 2rem;
+        }
+        
+        .offline-card {
+            background: #1a2436;
+            border-radius: 40px;
+            padding: 3rem 2rem;
+            border: 1px solid #2d3a4f;
+            max-width: 500px;
+            width: 100%;
+            box-shadow: 0 20px 30px -10px rgba(0, 0, 0, 0.7);
+        }
+        
+        .offline-icon {
+            font-size: 5rem;
+            margin-bottom: 1rem;
+            animation: float 3s ease-in-out infinite;
+        }
+        
+        .offline-title {
+            font-size: 2rem;
+            color: #facc15;
+            margin-bottom: 1rem;
+            font-family: 'Amiri', serif;
+        }
+        
+        .offline-text {
+            color: #94a3b8;
+            margin-bottom: 2rem;
+            line-height: 1.6;
+        }
+        
+        .offline-highlight {
+            color: #facc15;
+            font-weight: 600;
+            margin: 1rem 0;
+            padding: 1rem;
+            background: #facc1510;
+            border-radius: 20px;
+            border-left: 3px solid #facc15;
+            text-align: left;
+        }
+        
+        .offline-actions {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-top: 2rem;
+        }
+        
+        .offline-btn {
+            background: #2d3a4f;
+            border: none;
+            color: white;
+            padding: 0.8rem 2rem;
+            border-radius: 40px;
+            cursor: pointer;
+            text-decoration: none;
+            transition: all 0.2s;
+            font-weight: 500;
+            border: 1px solid transparent;
+        }
+        
+        .offline-btn:hover {
+            background: #3d4e66;
+            border-color: #facc1540;
+            color: #facc15;
+        }
+        
+        .offline-btn.primary {
+            background: #facc15;
+            color: #0f172a;
+            font-weight: 600;
+        }
+        
+        .offline-btn.primary:hover {
+            background: #ffd966;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(250, 204, 21, 0.3);
+        }
+        
+        .offline-footer {
+            margin-top: 2rem;
+            color: #4b5b73;
+            font-size: 0.9rem;
+            border-top: 1px solid #2d3a4f;
+            padding-top: 1.5rem;
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+        
+        @media (max-width: 480px) {
+            .offline-card {
+                padding: 2rem 1.5rem;
+            }
+            
+            .offline-title {
+                font-size: 1.8rem;
+            }
+            
+            .offline-icon {
+                font-size: 4rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="offline-container">
+            <div class="offline-card">
+                <div class="offline-icon">📡</div>
+                <h1 class="offline-title">You're Offline</h1>
+                <p class="offline-text">
+                    Don't worry! You can still access your downloaded content.
+                </p>
+                
+                <div class="offline-highlight">
+                    <strong>✨ Available Offline:</strong><br>
+                    • Juz 'Amma audio (cached surahs)<br>
+                    • 99 Names of Allah<br>
+                    • Arabic vocabulary<br>
+                    • Duas collection
+                </div>
+                
+                <div class="offline-actions">
+                    <a href="index.html" class="offline-btn">🏠 Home</a>
+                    <a href="names.html" class="offline-btn">📿 99 Names</a>
+                    <a href="arabic.html" class="offline-btn">📖 Learn Arabic</a>
+                    <a href="juzAmma.html" class="offline-btn primary">🎧 Juz 'Amma</a>
+                    <a href="dua-dhikr.html" class="offline-btn">🤲 Duas</a>
+                </div>
+                
+                <div class="offline-footer">
+                    <p>Connect to the internet to access all features</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <script>
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('/sw.js')
+      .then(reg => console.log('✅ Service Worker registered'))
+      .catch(err => console.log('❌ Service Worker error:', err));
+  }
+</script>
+</body>
+</html>

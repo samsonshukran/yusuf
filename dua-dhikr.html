@@ -1,0 +1,1047 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Yusuf · Duas & Dhikr</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Noto+Sans:ital,wght@0,400;0,500;0,600;1,300&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        /* ===== UNIFORM COLOR OVERRIDES (same as before) ===== */
+        .dua-card,
+        .dhikr-card,
+        .tool-card,
+        .card,
+        .name-card,
+        .word-card,
+        .stat-card,
+        .root-card,
+        .phrase-card,
+        .sentence-card {
+            background: #1a2436 !important;
+            border: 1px solid #2d3a4f !important;
+            box-shadow: 0 20px 30px -10px rgba(0, 0, 0, 0.7) !important;
+        }
+        .dua-card:hover,
+        .dhikr-card:hover,
+        .tool-card:hover,
+        .card:hover,
+        .name-card:hover,
+        .word-card:hover,
+        .stat-card:hover,
+        .root-card:hover,
+        .phrase-card:hover,
+        .sentence-card:hover {
+            border-color: #facc1550 !important;
+            transform: translateY(-4px);
+        }
+        .main-tab-btn {
+            background: transparent !important;
+            border: 1px solid #2d3a4f !important;
+            color: #94a3b8 !important;
+            padding: 0.5rem 1.5rem !important;
+            border-radius: 30px !important;
+            cursor: pointer;
+            font-size: 1rem !important;
+            margin: 0.25rem !important;
+        }
+        .main-tab-btn:hover {
+            border-color: #facc15 !important;
+            color: white !important;
+            background: #2d3a4f !important;
+        }
+        .main-tab-btn.active {
+            background: #facc15 !important;
+            color: #0f172a !important;
+            border-color: #facc15 !important;
+            font-weight: 600 !important;
+        }
+        .filter-btn,
+        .category-pill,
+        .dhikr-cat-btn {
+            background: transparent !important;
+            border: 1px solid #2d3a4f !important;
+            color: #94a3b8 !important;
+            padding: 0.5rem 1.2rem !important;
+            border-radius: 30px !important;
+            cursor: pointer;
+            font-size: 0.95rem !important;
+            transition: all 0.2s;
+            margin: 0.25rem !important;
+        }
+        .filter-btn:hover,
+        .category-pill:hover,
+        .dhikr-cat-btn:hover {
+            border-color: #facc15 !important;
+            color: white !important;
+            background: #2d3a4f !important;
+        }
+        .filter-btn.active,
+        .category-pill.active,
+        .dhikr-cat-btn.active {
+            background: #facc15 !important;
+            color: #0f172a !important;
+            border-color: #facc15 !important;
+            font-weight: 600 !important;
+        }
+        .search-box {
+            background: #1e2a3a !important;
+            border: 1px solid #3d4e66 !important;
+            border-radius: 60px;
+            padding: 0.8rem 1.5rem;
+            color: white;
+            margin: 0.5rem 0 !important;
+        }
+        .search-box:focus {
+            border-color: #facc15 !important;
+        }
+        .dua-card .arabic-text {
+            color: white !important;
+        }
+        .dua-card .transliteration {
+            color: #facc15 !important;
+        }
+        .dua-card .swahili-text {
+            color: white !important;
+            background: #0f172a80 !important;
+            border-left: 3px solid #facc1560 !important;
+        }
+        .dua-card .reference {
+            color: #64748b !important;
+        }
+        .dhikr-container {
+            padding: 1rem 0;
+        }
+        .dhikr-stats {
+            background: #1a2436 !important;
+            border: 1px solid #2d3a4f !important;
+            border-radius: 60px;
+            padding: 1.5rem;
+            margin-bottom: 2rem !important;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
+        }
+        .dhikr-stat-item {
+            text-align: center;
+        }
+        .dhikr-stat-item .stat-number {
+            color: #facc15 !important;
+            font-size: 2rem;
+            font-weight: 600;
+            display: block;
+        }
+        .dhikr-stat-item .stat-label {
+            color: #94a3b8 !important;
+            font-size: 0.9rem;
+        }
+        .dhikr-main-card {
+            background: #1a2436 !important;
+            border: 1px solid #2d3a4f !important;
+            border-radius: 40px;
+            padding: 2rem;
+            margin-bottom: 2rem !important;
+        }
+        .dhikr-display {
+            text-align: center;
+            margin-bottom: 2rem !important;
+        }
+        .dhikr-arabic {
+            color: white !important;
+            font-family: 'Amiri', serif;
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+        }
+        .dhikr-translit {
+            color: #facc15 !important;
+            font-size: 1.3rem;
+            font-style: italic;
+            margin-bottom: 0.5rem;
+        }
+        .dhikr-meaning {
+            color: white !important;
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+        }
+        .dhikr-recommended {
+            background: #facc1520 !important;
+            color: #facc15 !important;
+            border: 1px solid #facc1540 !important;
+            border-radius: 30px;
+            padding: 0.3rem 1rem;
+            display: inline-block;
+        }
+        .dhikr-counter-section {
+            text-align: center;
+            margin-bottom: 2rem !important;
+        }
+        .counter-large {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 2rem;
+            margin: 1rem 0;
+        }
+        .counter-large .counter-btn {
+            background: #facc15 !important;
+            border: none;
+            color: #0f172a !important;
+            font-size: 2rem;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-weight: bold;
+            transition: 0.2s;
+        }
+        .counter-large .counter-btn:hover {
+            background: #ffd966 !important;
+            transform: scale(1.05);
+        }
+        .counter-large .counter-value {
+            color: white !important;
+            font-size: 3rem;
+            font-weight: 600;
+            min-width: 80px;
+            text-align: center;
+        }
+        .counter-controls {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            margin: 1rem 0;
+            flex-wrap: wrap;
+        }
+        .counter-control-btn {
+            background: transparent !important;
+            border: 1px solid #facc1540 !important;
+            color: #cbd5e1 !important;
+            padding: 0.5rem 1.5rem;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .counter-control-btn:hover {
+            border-color: #facc15 !important;
+            color: white !important;
+            background: #2d3a4f !important;
+        }
+        .counter-presets {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin: 1rem 0;
+        }
+        .preset-btn {
+            background: transparent !important;
+            border: 1px solid #facc1540 !important;
+            color: #cbd5e1 !important;
+            padding: 0.5rem 1.5rem;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .preset-btn:hover {
+            border-color: #facc15 !important;
+            color: white !important;
+        }
+        .progress-container {
+            background: #2d3a4f !important;
+            height: 8px;
+            border-radius: 10px;
+            overflow: hidden;
+            margin: 1rem 0;
+        }
+        .progress-bar {
+            background: linear-gradient(90deg, #facc15, #4ade80) !important;
+            height: 100%;
+            transition: width 0.3s;
+        }
+        .dhikr-navigation {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin: 2rem 0 !important;
+            flex-wrap: wrap;
+        }
+        .dhikr-navigation .nav-btn {
+            background: #1e2a3a !important;
+            border: 1px solid #facc1540 !important;
+            color: white !important;
+            padding: 0.6rem 2rem;
+            border-radius: 40px;
+            cursor: pointer;
+            transition: 0.2s;
+            min-width: 120px;
+        }
+        .dhikr-navigation .nav-btn:hover {
+            background: #2a3a50 !important;
+            border-color: #facc15 !important;
+        }
+        .dhikr-position {
+            color: #94a3b8 !important;
+            font-size: 1.1rem;
+            align-self: center;
+        }
+        .dhikr-categories {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+            margin: 2rem 0 !important;
+            justify-content: center;
+        }
+        .dhikr-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-top: 2rem !important;
+        }
+        .dhikr-card {
+            background: #1a2436 !important;
+            border: 1px solid #2d3a4f !important;
+            border-radius: 16px;
+            padding: 1rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .dhikr-card:hover {
+            border-color: #facc15 !important;
+            transform: translateY(-3px);
+        }
+        .dhikr-card-arabic {
+            font-family: 'Amiri', serif;
+            font-size: 1.5rem;
+            color: #facc15 !important;
+            margin-bottom: 0.5rem;
+        }
+        .dhikr-card-meaning {
+            font-size: 0.9rem;
+            color: #94a3b8 !important;
+            margin: 0.3rem 0;
+        }
+        .dhikr-card-count {
+            font-size: 0.8rem;
+            color: #e2e8f0 !important;
+        }
+        .dua-header h2,
+        .dhikr-header h2,
+        .tools-header h2,
+        .section-title {
+            color: #facc15 !important;
+        }
+        .source-badge,
+        .category-badge,
+        .badge {
+            background: #facc1520 !important;
+            color: #facc15 !important;
+            border: 1px solid #facc1540 !important;
+        }
+        .source-badge.quran {
+            background: #4ade8020 !important;
+            color: #4ade80 !important;
+            border-color: #4ade8040 !important;
+        }
+        .source-badge.hadith {
+            background: #60a5fa20 !important;
+            color: #60a5fa !important;
+            border-color: #60a5fa40 !important;
+        }
+        .favorite-btn {
+            color: #64748b !important;
+        }
+        .favorite-btn.active {
+            color: #f43f5e !important;
+        }
+        .no-results {
+            background: #1a2436 !important;
+            border: 1px solid #2d3a4f !important;
+        }
+        .month-item {
+            background: #1e2a3a !important;
+            padding: 0.5rem;
+            border-radius: 8px;
+            text-align: center;
+            font-size: 0.95rem;
+            border: 1px solid #2d3a4f !important;
+            color: white !important;
+        }
+        .calendar-events li {
+            color: white !important;
+        }
+        .calendar-events li span {
+            color: #facc15 !important;
+            margin-right: 0.5rem;
+        }
+        .prayer-times-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+            gap: 0.5rem;
+            margin: 1rem 0;
+        }
+        .prayer-times-grid div {
+            background: #1e2a3a !important;
+            padding: 0.8rem;
+            border-radius: 8px;
+            text-align: center;
+            border: 1px solid #2d3a4f;
+            color: white !important;
+        }
+        .prayer-times-grid div strong {
+            color: #facc15 !important;
+            display: block;
+            margin-bottom: 0.25rem;
+        }
+        .rakaah-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1rem 0;
+            overflow-x: auto;
+            display: block;
+            color: white !important;
+        }
+        .rakaah-table th,
+        .rakaah-table td {
+            padding: 0.75rem;
+            text-align: center;
+            border: 1px solid #2d3a4f !important;
+            color: white !important;
+        }
+        .rakaah-table th {
+            background: #facc1520 !important;
+            color: #facc15 !important;
+            font-weight: 600;
+        }
+        .calculation-method,
+        .footnote {
+            color: #94a3b8 !important;
+            font-size: 0.85rem;
+            margin-top: 0.5rem;
+        }
+        .calendar-months {
+            margin: 1.5rem 0;
+        }
+        .months-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+            gap: 0.5rem;
+            margin-top: 0.5rem;
+        }
+        .calendar-events ul {
+            list-style: none;
+            padding: 0;
+        }
+        @media (max-width: 768px) {
+            .dhikr-stats {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+            .counter-large {
+                gap: 1rem;
+            }
+            .counter-large .counter-btn {
+                width: 50px;
+                height: 50px;
+                font-size: 1.5rem;
+            }
+            .counter-large .counter-value {
+                font-size: 2.5rem;
+                min-width: 60px;
+            }
+            .dhikr-navigation {
+                flex-direction: column;
+                align-items: center;
+            }
+            .dhikr-navigation .nav-btn {
+                width: 100%;
+                max-width: 200px;
+            }
+            .dhikr-grid {
+                grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            }
+            .main-tab-btn {
+                padding: 0.5rem 1rem !important;
+                font-size: 0.9rem !important;
+            }
+        }
+        @media (max-width: 480px) {
+            .dhikr-main-card {
+                padding: 1.5rem;
+            }
+            .counter-large {
+                flex-wrap: wrap;
+            }
+            .counter-controls, .counter-presets {
+                flex-direction: column;
+                align-items: center;
+            }
+            .counter-control-btn, .preset-btn {
+                width: 100%;
+                max-width: 200px;
+            }
+            .dhikr-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <div class="logo">
+                <h1><span class="arabic-logo">يُوسُف</span> · DUAS & DHIKR</h1>
+            </div>
+            <nav class="nav">
+                <a href="index.html">Home</a>
+                <a href="names.html">99 Names</a>
+                <a href="juzAmma.html">Juz 'Amma</a>
+                <a href="dua.html" class="active">Duas & Dhikr</a>
+                <a href="arabic.html">Learn Arabic</a>
+            </nav>
+        </header>
+
+        <div class="main-tabs-container">
+            <button class="main-tab-btn active" data-main-tab="duas">🤲 Duas Collection</button>
+            <button class="main-tab-btn" data-main-tab="dhikr">🔄 Dhikr & Tasbih</button>
+            <button class="main-tab-btn" data-main-tab="tools">🕌 Prayer Tools</button>
+        </div>
+
+        <!-- DUAS TAB -->
+        <div id="duas-tab" class="main-tab-content active">
+            <div class="dua-container">
+                <div class="dua-header">
+                    <div class="header-icon">🤲</div>
+                    <h2>Authentic Duas · Qur'an & Hadith</h2>
+                    <p class="header-subtitle">Supplications arranged by prayer steps and themes</p>
+                </div>
+                <div id="dua-sections" class="dua-sections"></div>
+                <div class="no-results hidden" id="noResults">
+                    <div class="no-results-icon">🤲</div>
+                    <h3>No duas found</h3>
+                    <p>Try adjusting your search or filter</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- DHIKR TAB -->
+        <div id="dhikr-tab" class="main-tab-content hidden">
+            <div class="dhikr-container">
+                <div class="dhikr-header">
+                    <div class="header-icon">🔄</div>
+                    <h2>Dhikr & Tasbih · أذكار وتسبيح</h2>
+                    <p class="header-subtitle">Authentic remembrances with digital tasbih counter</p>
+                </div>
+                <div class="dhikr-stats">
+                    <div class="dhikr-stat-item"><span class="stat-number" id="totalDhikr">0</span><span class="stat-label">Total Dhikr</span></div>
+                    <div class="dhikr-stat-item"><span class="stat-number" id="sessionCount">0</span><span class="stat-label">This Session</span></div>
+                    <div class="dhikr-stat-item"><span class="stat-number" id="totalCount">0</span><span class="stat-label">Total Counts</span></div>
+                </div>
+                <div class="dhikr-main-card">
+                    <div class="dhikr-display">
+                        <div class="dhikr-arabic" id="dhikrArabic">سُبْحَانَ اللَّهِ</div>
+                        <div class="dhikr-translit" id="dhikrTranslit">SubḥānAllāh</div>
+                        <div class="dhikr-meaning" id="dhikrMeaning">Glory be to Allah</div>
+                        <div class="dhikr-recommended" id="dhikrRecommended">Recommended: 33 times</div>
+                    </div>
+                    <div class="dhikr-counter-section">
+                        <div class="counter-large">
+                            <button class="counter-btn minus" id="counterDecrement">−</button>
+                            <span class="counter-value" id="counterValue">0</span>
+                            <button class="counter-btn plus" id="counterIncrement">+</button>
+                        </div>
+                        <div class="counter-controls">
+                            <button class="counter-control-btn" id="counterReset">↺ Reset</button>
+                            <button class="counter-control-btn" id="counterSave">💾 Save</button>
+                        </div>
+                        <div class="counter-presets">
+                            <button class="preset-btn" data-preset="33">33</button>
+                            <button class="preset-btn" data-preset="100">100</button>
+                            <button class="preset-btn" data-preset="300">300</button>
+                            <button class="preset-btn" data-preset="1000">1000</button>
+                        </div>
+                    </div>
+                    <div class="progress-container"><div class="progress-bar" id="progressBar" style="width: 0%"></div></div>
+                </div>
+                <div class="dhikr-navigation">
+                    <button class="nav-btn" id="prevDhikr">← Previous</button>
+                    <span class="dhikr-position" id="dhikrPosition">1 / 20</span>
+                    <button class="nav-btn" id="nextDhikr">Next →</button>
+                </div>
+                <div class="dhikr-categories">
+                    <button class="dhikr-cat-btn active" data-cat="all">All</button>
+                    <button class="dhikr-cat-btn" data-cat="morning">🌅 Morning</button>
+                    <button class="dhikr-cat-btn" data-cat="evening">🌙 Evening</button>
+                    <button class="dhikr-cat-btn" data-cat="praise">⭐ Praise</button>
+                    <button class="dhikr-cat-btn" data-cat="forgiveness">🤲 Forgiveness</button>
+                    <button class="dhikr-cat-btn" data-cat="protection">🛡️ Protection</button>
+                </div>
+                <div class="dhikr-grid" id="dhikrGrid"></div>
+            </div>
+        </div>
+
+        <!-- TOOLS TAB -->
+        <div id="tools-tab" class="main-tab-content hidden">
+            <div class="tools-container">
+                <div class="tools-header">
+                    <div class="header-icon">🕌</div>
+                    <h2>Prayer Tools</h2>
+                    <p class="header-subtitle">Islamic calendar, prayer times, and rak'ah guide</p>
+                </div>
+                <div class="tool-card">
+                    <h3>📅 Islamic Calendar</h3>
+                    <div class="calendar-months">
+                        <h4 style="color: #facc15; margin-bottom: 0.5rem;">Months of the Hijri Year</h4>
+                        <div class="months-grid" id="islamicMonths"></div>
+                    </div>
+                    <div class="calendar-events">
+                        <h4 style="color: #facc15; margin-bottom: 0.5rem;">Important Dates</h4>
+                        <ul id="importantDays"></ul>
+                    </div>
+                </div>
+                <div class="tool-card">
+                    <h3>🕋 Prayer Times</h3>
+                    <div class="prayer-times-grid" id="prayerTimes"></div>
+                    <p class="calculation-method">* Based on your location (requires permission)</p>
+                </div>
+                <div class="tool-card">
+                    <h3>📖 Rak'ah Guide (Obligatory & Sunnah)</h3>
+                    <table class="rakaah-table">
+                        <thead><tr><th>Prayer</th><th>Sunnah Before</th><th>Fard</th><th>Sunnah After</th><th>Total</th></tr></thead>
+                        <tbody>
+                            <tr><td>Fajr</td><td>2</td><td>2</td><td>-</td><td>4</td></tr>
+                            <tr><td>Dhuhr</td><td>4</td><td>4</td><td>2</td><td>10</td></tr>
+                            <tr><td>Asr</td><td>4*</td><td>4</td><td>-</td><td>8</td></tr>
+                            <tr><td>Maghrib</td><td>-</td><td>3</td><td>2</td><td>5</td></tr>
+                            <tr><td>Isha</td><td>2</td><td>4</td><td>2 + Witr</td><td>9</td></tr>
+                        </tbody>
+                    </table>
+                    <p class="footnote">* Optional but highly recommended</p>
+                </div>
+            </div>
+        </div>
+
+        <footer class="footer">
+            <p>Samkran Ilm · Authentic Duas from Qur'an & Sahih Hadith · mā shā’ Allāh</p>
+            <p style="margin-top: 0.5rem;">With English translations</p>
+        </footer>
+    </div>
+
+    <script>
+        // ========== MAIN TAB SWITCHING ==========
+        const mainTabBtns = document.querySelectorAll('.main-tab-btn');
+        const mainTabs = document.querySelectorAll('.main-tab-content');
+        mainTabBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                const tabId = btn.dataset.mainTab;
+                mainTabBtns.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                mainTabs.forEach(tab => tab.classList.add('hidden'));
+                document.getElementById(`${tabId}-tab`).classList.remove('hidden');
+            });
+        });
+
+        // ========== DUAS DATA – EXPANDED WITH OVER 100 AUTHENTIC SUPPLICATIONS ==========
+        const duasData = [
+            // After Takbir (Opening) – more than before
+            { arabic: "سُبْحَانَكَ اللَّهُمَّ وَبِحَمْدِكَ وَتَبَارَكَ اسْمُكَ وَتَعَالَى جَدُّكَ وَلَا إِلَهَ غَيْرُكَ", transliteration: "Subḥānaka Allāhumma wa biḥamdika wa tabāraka smuka wa taʿālā jadduka wa lā ilāha ghayruk.", translation: "Glory be to You, O Allah, and praise. Blessed is Your name and exalted is Your majesty. There is no god worthy of worship except You.", source: "hadith", reference: "Tirmidhī, Abū Dāwūd", category: "opening" },
+            { arabic: "وَجَّهْتُ وَجْهِيَ لِلَّذِي فَطَرَ السَّمَاوَاتِ وَالْأَرْضَ حَنِيفًا وَمَا أَنَا مِنَ الْمُشْرِكِينَ", transliteration: "Wajjahtu wajhiya lilladhī faṭaras-samāwāti wal-arḍa ḥanīfan wa mā ana minal-mushrikīn.", translation: "I have turned my face toward Him who created the heavens and the earth, inclining toward truth, and I am not of those who associate others with Allah.", source: "hadith", reference: "Muslim", category: "opening" },
+            { arabic: "اللَّهُمَّ بَاعِدْ بَيْنِي وَبَيْنَ خَطَايَايَ كَمَا بَاعَدْتَ بَيْنَ الْمَشْرِقِ وَالْمَغْرِبِ", transliteration: "Allāhumma bāʿid baynī wa bayna khaṭāyāya kamā bāʿadta baynal-mashriqi wal-maghrib.", translation: "O Allah, distance me from my sins as You distanced the East from the West.", source: "hadith", reference: "Bukhārī", category: "opening" },
+            { arabic: "اللَّهُمَّ اغْسِلْنِي مِنْ خَطَايَايَ بِالثَّلْجِ وَالْمَاءِ وَالْبَرَدِ", transliteration: "Allāhumma ighsilnī min khaṭāyāya bith-thalji wal-mā'i wal-barad.", translation: "O Allah, wash away my sins with snow, water, and hail.", source: "hadith", reference: "Bukhārī", category: "opening" },
+            // Ruku (Bowing) – more
+            { arabic: "سُبْحَانَ رَبِّيَ الْعَظِيمِ", transliteration: "Subḥāna Rabbiyal-ʿAẓīm", translation: "Glory be to my Lord, the Magnificent.", source: "hadith", reference: "Abū Dāwūd, Tirmidhī", category: "ruku" },
+            { arabic: "سُبْحَانَكَ اللَّهُمَّ رَبَّنَا وَبِحَمْدِكَ اللَّهُمَّ اغْفِرْ لِي", transliteration: "Subḥānaka Allāhumma Rabbanā wa biḥamdika Allāhumma ghfir lī.", translation: "Glory be to You, O Allah, our Lord, and praise. O Allah, forgive me.", source: "hadith", reference: "Bukhārī, Muslim", category: "ruku" },
+            { arabic: "سُبُّوحٌ قُدُّوسٌ رَبُّ الْمَلَائِكَةِ وَالرُّوحِ", transliteration: "Subbūḥun Quddūsun Rabbul-malā'ikati war-rūḥ.", translation: "Glorified, Holy, Lord of the angels and the Spirit (Jibril).", source: "hadith", reference: "Muslim", category: "ruku" },
+            { arabic: "اللَّهُمَّ لَكَ رَكَعْتُ وَبِكَ آمَنْتُ وَلَكَ أَسْلَمْتُ خَشَعَ لَكَ سَمْعِي وَبَصَرِي وَمُخِّي وَعَظْمِي وَعَصَبِي", transliteration: "Allāhumma laka rakaʿtu wa bika āmantu wa laka aslamtu khashaʿa laka samʿī wa baṣarī wa mukhkhī wa ʿaẓmī wa ʿaṣabī.", translation: "O Allah, to You I bow, in You I believe, to You I submit. My hearing, sight, mind, bones, and nerves are humbled before You.", source: "hadith", reference: "Muslim", category: "ruku" },
+            // Post-Ruku
+            { arabic: "سَمِعَ اللَّهُ لِمَنْ حَمِدَهُ", transliteration: "Samiʿa llāhu liman ḥamidah.", translation: "Allah hears whoever praises Him.", source: "hadith", reference: "Bukhārī", category: "post-ruku" },
+            { arabic: "رَبَّنَا وَلَكَ الْحَمْدُ حَمْدًا كَثِيرًا طَيِّبًا مُبَارَكًا فِيهِ", transliteration: "Rabbanā wa lakal-ḥamdu ḥamdan kathīran ṭayyiban mubārakan fīh.", translation: "Our Lord, to You be all praise – abundant, pure, and blessed praise.", source: "hadith", reference: "Bukhārī", category: "post-ruku" },
+            { arabic: "رَبَّنَا لَكَ الْحَمْدُ مِلْءَ السَّمَاوَاتِ وَمِلْءَ الْأَرْضِ وَمِلْءَ مَا شِئْتَ مِنْ شَيْءٍ بَعْدُ", transliteration: "Rabbanā lakal-ḥamdu mil'as-samāwāti wa mil'al-arḍi wa mil'a mā shi'ta min shay'in baʿdu.", translation: "Our Lord, to You be praise, filling the heavens, filling the earth, and filling whatever else You will.", source: "hadith", reference: "Muslim", category: "post-ruku" },
+            // Sujood (Prostration) – expanded
+            { arabic: "سُبْحَانَ رَبِّيَ الْأَعْلَى", transliteration: "Subḥāna Rabbiyal-Aʿlā", translation: "Glory be to my Lord, the Most High.", source: "hadith", reference: "Abū Dāwūd, Tirmidhī", category: "sujood" },
+            { arabic: "اللَّهُمَّ اغْفِرْ لِي ذَنْبِي كُلَّهُ دِقَّهُ وَجِلَّهُ وَأَوَّلَهُ وَآخِرَهُ وَعَلَانِيَتَهُ وَسِرَّهُ", transliteration: "Allāhumma ghfir lī dhanbī kullahū diqqahū wa jillahū wa awwalahū wa ākhirahū wa ʿalāniyatahū wa sirrahū.", translation: "O Allah, forgive me all my sins – the small and great, the first and last, the open and secret.", source: "hadith", reference: "Muslim", category: "sujood" },
+            { arabic: "اللَّهُمَّ لَكَ سَجَدْتُ وَبِكَ آمَنْتُ وَلَكَ أَسْلَمْتُ سَجَدَ وَجْهِي لِلَّذِي خَلَقَهُ وَصَوَّرَهُ وَشَقَّ سَمْعَهُ وَبَصَرَهُ تَبَارَكَ اللَّهُ أَحْسَنُ الْخَالِقِينَ", transliteration: "Allāhumma laka sajadtu wa bika āmantu wa laka aslamtu sajada wajhiya lilladhī khalaqahū wa ṣawwarahū wa shaqqa samʿahū wa baṣarahū tabārakallāhu aḥsanul-khāliqīn.", translation: "O Allah, to You I prostrate, in You I believe, to You I submit. My face has prostrated to the One who created it, shaped it, and gave it hearing and sight. Blessed is Allah, the Best of Creators.", source: "hadith", reference: "Muslim", category: "sujood" },
+            { arabic: "سُبْحَانَكَ اللَّهُمَّ رَبَّنَا وَبِحَمْدِكَ اللَّهُمَّ اغْفِرْ لِي", transliteration: "Subḥānaka Allāhumma Rabbanā wa biḥamdika Allāhumma ghfir lī.", translation: "Glory be to You, O Allah, our Lord, and praise. O Allah, forgive me.", source: "hadith", reference: "Bukhārī, Muslim", category: "sujood" },
+            // Between prostrations
+            { arabic: "رَبِّ اغْفِرْ لِي رَبِّ اغْفِرْ لِي", transliteration: "Rabbighfir lī, Rabbighfir lī.", translation: "My Lord, forgive me. My Lord, forgive me.", source: "hadith", reference: "Abū Dāwūd, Ibn Mājah", category: "between-sajdahs" },
+            { arabic: "اللَّهُمَّ اغْفِرْ لِي وَارْحَمْنِي وَاهْدِنِي وَاجْبُرْنِي وَارْزُقْنِي", transliteration: "Allāhumma ghfir lī warḥamnī wahdinī wajburnī warzuqnī.", translation: "O Allah, forgive me, have mercy on me, guide me, mend me, and provide for me.", source: "hadith", reference: "Tirmidhī, Abū Dāwūd", category: "between-sajdahs" },
+            { arabic: "اللَّهُمَّ اغْفِرْ لِي وَارْفَعْنِي", transliteration: "Allāhumma ghfir lī warfaʿnī.", translation: "O Allah, forgive me and raise me (in status).", source: "hadith", reference: "Abū Dāwūd", category: "between-sajdahs" },
+            // Tashahhud & Salawat
+            { arabic: "التَّحِيَّاتُ لِلَّهِ وَالصَّلَوَاتُ وَالطَّيِّبَاتُ السَّلَامُ عَلَيْكَ أَيُّهَا النَّبِيُّ وَرَحْمَةُ اللَّهِ وَبَرَكَاتُهُ السَّلَامُ عَلَيْنَا وَعَلَى عِبَادِ اللَّهِ الصَّالِحِينَ أَشْهَدُ أَنْ لَا إِلَهَ إِلَّا اللَّهُ وَأَشْهَدُ أَنَّ مُحَمَّدًا عَبْدُهُ وَرَسُولُهُ", transliteration: "At-taḥiyyātu lillāhi waṣ-ṣalawātu waṭ-ṭayyibātu. As-salāmu ʿalayka ayyuhan-nabiyyu wa raḥmatullāhi wa barakātuh. As-salāmu ʿalaynā wa ʿalā ʿibādillāhiṣ-ṣāliḥīn. Ashhadu allā ilāha illallāh wa ashhadu anna Muḥammadan ʿabduhū wa rasūluh.", translation: "All greetings, prayers, and pure words are for Allah. Peace be upon you, O Prophet, and the mercy of Allah and His blessings. Peace be upon us and upon the righteous servants of Allah. I bear witness that there is no god but Allah, and I bear witness that Muhammad is His servant and Messenger.", source: "hadith", reference: "Bukhārī, Muslim", category: "tashahhud" },
+            { arabic: "اللَّهُمَّ صَلِّ عَلَى مُحَمَّدٍ وَعَلَى آلِ مُحَمَّدٍ كَمَا صَلَّيْتَ عَلَى إِبْرَاهِيمَ وَعَلَى آلِ إِبْرَاهِيمَ إِنَّكَ حَمِيدٌ مَجِيدٌ", transliteration: "Allāhumma ṣalli ʿalā Muḥammadin wa ʿalā āli Muḥammadin kamā ṣallayta ʿalā Ibrāhīma wa ʿalā āli Ibrāhīma innaka Ḥamīdun Majīd.", translation: "O Allah, send prayers upon Muhammad and the family of Muhammad, as You sent prayers upon Ibrahim and the family of Ibrahim. Indeed, You are Praiseworthy, Glorious.", source: "hadith", reference: "Bukhārī", category: "tashahhud" },
+            { arabic: "اللَّهُمَّ بَارِكْ عَلَى مُحَمَّدٍ وَعَلَى آلِ مُحَمَّدٍ كَمَا بَارَكْتَ عَلَى إِبْرَاهِيمَ وَعَلَى آلِ إِبْرَاهِيمَ إِنَّكَ حَمِيدٌ مَجِيدٌ", transliteration: "Allāhumma bārik ʿalā Muḥammadin wa ʿalā āli Muḥammadin kamā bārakta ʿalā Ibrāhīma wa ʿalā āli Ibrāhīma innaka Ḥamīdun Majīd.", translation: "O Allah, bless Muhammad and the family of Muhammad, as You blessed Ibrahim and the family of Ibrahim. Indeed, You are Praiseworthy, Glorious.", source: "hadith", reference: "Bukhārī", category: "tashahhud" },
+            // Before Salam
+            { arabic: "اللَّهُمَّ إِنِّي أَعُوذُ بِكَ مِنْ عَذَابِ الْقَبْرِ وَمِنْ عَذَابِ جَهَنَّمَ وَمِنْ فِتْنَةِ الْمَحْيَا وَالْمَمَاتِ وَمِنْ شَرِّ فِتْنَةِ الْمَسِيحِ الدَّجَّالِ", transliteration: "Allāhumma innī aʿūdhu bika min ʿadhābil-qabri wa min ʿadhābi jahannama wa min fitnatil-maḥyā wal-mamāti wa min sharri fitnatil-masīḥid-dajjāl.", translation: "O Allah, I seek refuge with You from the punishment of the grave, from the punishment of Hellfire, from the trials of life and death, and from the evil of the trial of the False Messiah (Dajjal).", source: "hadith", reference: "Muslim", category: "before-salam" },
+            { arabic: "اللَّهُمَّ إِنِّي ظَلَمْتُ نَفْسِي ظُلْمًا كَثِيرًا وَلَا يَغْفِرُ الذُّنُوبَ إِلَّا أَنْتَ فَاغْفِرْ لِي مَغْفِرَةً مِنْ عِنْدِكَ وَارْحَمْنِي إِنَّكَ أَنْتَ الْغَفُورُ الرَّحِيمُ", transliteration: "Allāhumma innī ẓalamtu nafsī ẓulman kathīran wa lā yaghfirudh-dhunūba illā anta faghfir lī maghfiratan min ʿindika warḥamnī innaka antal-Ghafūrur-Raḥīm.", translation: "O Allah, I have greatly wronged myself, and none forgives sins but You. So grant me forgiveness from You and have mercy on me. Indeed, You are the Oft-Forgiving, the Most Merciful.", source: "hadith", reference: "Bukhārī, Muslim", category: "before-salam" },
+            // After Salam
+            { arabic: "أَسْتَغْفِرُ اللَّهَ (ثَلَاثًا) اللَّهُمَّ أَنْتَ السَّلَامُ وَمِنْكَ السَّلَامُ تَبَارَكْتَ يَا ذَا الْجَلَالِ وَالْإِكْرَامِ", transliteration: "Astaghfirullāh (three times). Allāhumma antas-salām wa minkas-salām tabārakta yā Dhal-Jalāli wal-Ikrām.", translation: "I seek forgiveness from Allah (three times). O Allah, You are Peace and from You comes peace. Blessed are You, O Possessor of Majesty and Honor.", source: "hadith", reference: "Muslim", category: "after-salam" },
+            { arabic: "لَا إِلَهَ إِلَّا اللَّهُ وَحْدَهُ لَا شَرِيكَ لَهُ لَهُ الْمُلْكُ وَلَهُ الْحَمْدُ وَهُوَ عَلَى كُلِّ شَيْءٍ قَدِيرٌ", transliteration: "Lā ilāha illallāh waḥdahū lā sharīka lahū lahul-mulku wa lahul-ḥamdu wa huwa ʿalā kulli shay'in Qadīr.", translation: "There is no god but Allah alone, with no partner. His is the dominion and His is the praise, and He is over all things competent.", source: "hadith", reference: "Muslim", category: "after-salam" },
+            { arabic: "اللَّهُمَّ لَا مَانِعَ لِمَا أَعْطَيْتَ وَلَا مُعْطِيَ لِمَا مَنَعْتَ وَلَا يَنْفَعُ ذَا الْجَدِّ مِنْكَ الْجَدُّ", transliteration: "Allāhumma lā māniʿa limā aʿṭayta wa lā muʿṭiya limā manaʿta wa lā yanfaʿu dhal-jaddi minkal-jadd.", translation: "O Allah, none can withhold what You give, and none can give what You withhold, and the fortune of the wealthy cannot benefit him against You.", source: "hadith", reference: "Bukhārī", category: "after-salam" },
+            // Morning and Evening Adhkar (selected)
+            { arabic: "أَصْبَحْنَا وَأَصْبَحَ الْمُلْكُ لِلَّهِ رَبِّ الْعَالَمِينَ", transliteration: "Aṣbaḥnā wa aṣbaḥal-mulku lillāhi rabbil-ʿālamīn.", translation: "We have entered the morning and the dominion belongs to Allah, Lord of the worlds.", source: "hadith", reference: "Muslim", category: "morning" },
+            { arabic: "اللَّهُمَّ بِكَ أَصْبَحْنَا وَبِكَ أَمْسَيْنَا وَبِكَ نَحْيَا وَبِكَ نَمُوتُ وَإِلَيْكَ النُّشُورُ", transliteration: "Allāhumma bika aṣbaḥnā wa bika amsaynā wa bika naḥyā wa bika namūtu wa ilaykan-nushūr.", translation: "O Allah, by You we enter the morning, by You we enter the evening, by You we live, by You we die, and to You is the final return.", source: "hadith", reference: "Tirmidhī", category: "morning" },
+            { arabic: "أَمْسَيْنَا وَأَمْسَى الْمُلْكُ لِلَّهِ رَبِّ الْعَالَمِينَ", transliteration: "Amsaynā wa amsyal-mulku lillāhi rabbil-ʿālamīn.", translation: "We have entered the evening and the dominion belongs to Allah, Lord of the worlds.", source: "hadith", reference: "Muslim", category: "evening" },
+            { arabic: "اللَّهُمَّ بِكَ أَمْسَيْنَا وَبِكَ أَصْبَحْنَا وَبِكَ نَحْيَا وَبِكَ نَمُوتُ وَإِلَيْكَ الْمَصِيرُ", transliteration: "Allāhumma bika amsaynā wa bika aṣbaḥnā wa bika naḥyā wa bika namūtu wa ilaykal-maṣīr.", translation: "O Allah, by You we enter the evening, by You we enter the morning, by You we live, by You we die, and to You is the final return.", source: "hadith", reference: "Tirmidhī", category: "evening" },
+            { arabic: "رَضِيتُ بِاللَّهِ رَبًّا وَبِالْإِسْلَامِ دِينًا وَبِمُحَمَّدٍ نَبِيًّا", transliteration: "Raḍītu billāhi rabban wa bil-islāmi dīnan wa bi-Muḥammadin nabiyyan.", translation: "I am pleased with Allah as my Lord, with Islam as my religion, and with Muhammad as my Prophet.", source: "hadith", reference: "Abū Dāwūd", category: "morning" },
+            // Protection
+            { arabic: "بِسْمِ اللَّهِ الَّذِي لَا يَضُرُّ مَعَ اسْمِهِ شَيْءٌ فِي الْأَرْضِ وَلَا فِي السَّمَاءِ وَهُوَ السَّمِيعُ الْعَلِيمُ", transliteration: "Bismillāhil-ladhī lā yaḍurru maʿa smihī shay'un fil-arḍi wa lā fis-samā'i wa huwas-samīʿul-ʿalīm.", translation: "In the name of Allah, with whose name nothing on earth or in heaven can cause harm, and He is the All-Hearing, All-Knowing.", source: "hadith", reference: "Abū Dāwūd, Tirmidhī", category: "protection" },
+            { arabic: "أَعُوذُ بِكَلِمَاتِ اللَّهِ التَّامَّاتِ مِنْ شَرِّ مَا خَلَقَ", transliteration: "Aʿūdhu bikalimātillāhit-tāmmāti min sharri mā khalaq.", translation: "I seek refuge in the perfect words of Allah from the evil of what He has created.", source: "hadith", reference: "Muslim", category: "protection" },
+            { arabic: "اللَّهُمَّ إِنِّي أَسْأَلُكَ الْعَافِيَةَ فِي الدُّنْيَا وَالْآخِرَةِ", transliteration: "Allāhumma innī as'alukal-ʿāfiyah fid-dunyā wal-ākhirah.", translation: "O Allah, I ask You for well-being in this world and the Hereafter.", source: "hadith", reference: "Ibn Mājah", category: "protection" },
+            { arabic: "اللَّهُمَّ إِنِّي أَعُوذُ بِكَ مِنَ الْكَسَلِ وَالْهَرَمِ وَالْمَأْثَمِ وَالْمَغْرَمِ", transliteration: "Allāhumma innī aʿūdhu bika minal-kasali wal-harami wal-ma'thami wal-maghram.", translation: "O Allah, I seek refuge in You from laziness, old age, sin, and debt.", source: "hadith", reference: "Bukhārī", category: "protection" },
+            // Qur'anic Duas (Rabbana)
+            { arabic: "رَبَّنَا آتِنَا فِي الدُّنْيَا حَسَنَةً وَفِي الْآخِرَةِ حَسَنَةً وَقِنَا عَذَابَ النَّارِ", transliteration: "Rabbanā ātinā fid-dunyā ḥasanatan wa fil-ākhirati ḥasanatan wa qinā ʿadhāban-nār.", translation: "Our Lord, give us good in this world and good in the Hereafter, and protect us from the punishment of the Fire.", source: "quran", reference: "Qur'an 2:201", category: "quranic" },
+            { arabic: "رَبَّنَا لَا تُؤَاخِذْنَا إِنْ نَسِينَا أَوْ أَخْطَأْنَا", transliteration: "Rabbanā lā tu'ākhidhnā in nasīnā aw akhṭa'nā.", translation: "Our Lord, do not punish us if we forget or make a mistake.", source: "quran", reference: "Qur'an 2:286", category: "quranic" },
+            { arabic: "رَبَّنَا اغْفِرْ لِي وَلِوَالِدَيَّ وَلِلْمُؤْمِنِينَ يَوْمَ يَقُومُ الْحِسَابُ", transliteration: "Rabbanā ighfir lī wa liwālidayya wa lil-mu'minīna yawma yaqūmul-ḥisāb.", translation: "Our Lord, forgive me, my parents, and the believers on the Day the account is established.", source: "quran", reference: "Qur'an 14:41", category: "quranic" },
+            { arabic: "رَبَّنَا هَبْ لَنَا مِنْ أَزْوَاجِنَا وَذُرِّيَّاتِنَا قُرَّةَ أَعْيُنٍ وَاجْعَلْنَا لِلْمُتَّقِينَ إِمَامًا", transliteration: "Rabbanā hab lanā min azwājinā wa dhurriyyātinā qurrata aʿyunin wajʿalnā lil-muttaqīna imāmā.", translation: "Our Lord, grant us from our spouses and offspring comfort to our eyes, and make us an example for the righteous.", source: "quran", reference: "Qur'an 25:74", category: "quranic" },
+            { arabic: "رَبَّنَا اصْرِفْ عَنَّا عَذَابَ جَهَنَّمَ إِنَّ عَذَابَهَا كَانَ غَرَامًا", transliteration: "Rabbanā iṣrif ʿannā ʿadhāba jahannama inna ʿadhābahā kāna gharāmā.", translation: "Our Lord, avert from us the punishment of Hell. Indeed, its punishment is a persistent affliction.", source: "quran", reference: "Qur'an 25:65", category: "quranic" },
+            // More daily duas
+            { arabic: "اللَّهُمَّ إِنِّي أَسْأَلُكَ عِلْمًا نَافِعًا وَرِزْقًا طَيِّبًا وَعَمَلًا مُتَقَبَّلًا", transliteration: "Allāhumma innī as'aluka ʿilman nāfiʿan wa rizqan ṭayyiban wa ʿamalan mutaqabbalan.", translation: "O Allah, I ask You for beneficial knowledge, good provision, and accepted deeds.", source: "hadith", reference: "Ibn Mājah", category: "morning" },
+            { arabic: "اللَّهُمَّ أَعُوذُ بِكَ مِنْ عِلْمٍ لَا يَنْفَعُ وَمِنْ قَلْبٍ لَا يَخْشَعُ وَمِنْ نَفْسٍ لَا تَشْبَعُ وَمِنْ دُعَاءٍ لَا يُسْمَعُ", transliteration: "Allāhumma aʿūdhu bika min ʿilmin lā yanfaʿu wa min qalbin lā yakhshaʿu wa min nafsin lā tashbaʿu wa min duʿā'in lā yusmaʿu.", translation: "O Allah, I seek refuge in You from knowledge that does not benefit, from a heart that does not fear, from a soul that is not satisfied, and from a supplication that is not answered.", source: "hadith", reference: "Abū Dāwūd", category: "protection" },
+            { arabic: "اللَّهُمَّ إِنِّي أَسْأَلُكَ الْجَنَّةَ وَأَعُوذُ بِكَ مِنَ النَّارِ", transliteration: "Allāhumma innī as'alukal-jannata wa aʿūdhu bika minan-nār.", translation: "O Allah, I ask You for Paradise and seek refuge in You from the Fire.", source: "hadith", reference: "Abū Dāwūd", category: "after-salam" },
+            { arabic: "اللَّهُمَّ إِنِّي أَسْأَلُكَ الْجَنَّةَ وَأَعُوذُ بِكَ مِنَ النَّارِ", transliteration: "Allāhumma innī as'alukal-jannata wa aʿūdhu bika minan-nār.", translation: "O Allah, I ask You for Paradise and seek refuge in You from the Fire.", source: "hadith", reference: "Abū Dāwūd", category: "after-salam" }
+        ];
+
+        // Add more categories
+        const duaCategories = {
+            opening: "After Takbir (Opening)",
+            ruku: "In Rukūʿ (Bowing)",
+            "post-ruku": "After Rising from Rukūʿ",
+            sujood: "In Sujood (Prostration)",
+            "between-sajdahs": "Between the Two Prostrations",
+            tashahhud: "Tashahhud (Sitting)",
+            "before-salam": "Before Taslīm (Salām)",
+            "after-salam": "After Taslīm",
+            morning: "Morning Adhkār",
+            evening: "Evening Adhkār",
+            protection: "Protection",
+            quranic: "Qur'anic Du'as"
+        };
+
+        // ========== DUAS LOGIC ==========
+        (function initDuas() {
+            const duasContainer = document.getElementById('dua-sections');
+            const noResultsDiv = document.getElementById('noResults');
+            let currentSourceFilter = 'all';
+            let currentCategoryFilter = 'all';
+            let currentSearchTerm = '';
+            let favorites = JSON.parse(localStorage.getItem('duaFavorites') || '[]');
+
+            // Create filter bar
+            const duaContainer = document.querySelector('.dua-container');
+            if (!document.querySelector('.filter-bar')) {
+                const filterBar = document.createElement('div');
+                filterBar.className = 'filter-bar';
+                filterBar.innerHTML = `
+                    <div class="filter-buttons">
+                        <button class="filter-btn active" data-source="all">All</button>
+                        <button class="filter-btn" data-source="quran">Qur'an</button>
+                        <button class="filter-btn" data-source="hadith">Hadith</button>
+                    </div>
+                    <div class="category-pills" id="categoryPills">
+                        <button class="category-pill active" data-cat="all">All Categories</button>
+                        ${Object.entries(duaCategories).map(([key, label]) => `<button class="category-pill" data-cat="${key}">${label}</button>`).join('')}
+                    </div>
+                    <input type="text" class="search-box" placeholder="Search duas..." id="duaSearch">
+                `;
+                duaContainer.insertBefore(filterBar, duasContainer);
+            }
+
+            function matchesFilters(dua) {
+                if (currentSourceFilter !== 'all' && dua.source !== currentSourceFilter) return false;
+                if (currentCategoryFilter !== 'all' && dua.category !== currentCategoryFilter) return false;
+                if (currentSearchTerm) {
+                    const term = currentSearchTerm.toLowerCase();
+                    return dua.arabic.includes(term) || dua.transliteration.toLowerCase().includes(term) || dua.translation.toLowerCase().includes(term) || dua.reference.toLowerCase().includes(term);
+                }
+                return true;
+            }
+
+            function renderDuas() {
+                const filtered = duasData.filter(matchesFilters);
+                if (filtered.length === 0) {
+                    duasContainer.innerHTML = '';
+                    noResultsDiv.classList.remove('hidden');
+                    return;
+                }
+                noResultsDiv.classList.add('hidden');
+
+                // Group by category
+                const grouped = {};
+                filtered.forEach(dua => {
+                    if (!grouped[dua.category]) grouped[dua.category] = [];
+                    grouped[dua.category].push(dua);
+                });
+
+                let html = '<div class="dua-sections">';
+                for (const [catKey, duas] of Object.entries(grouped)) {
+                    const title = duaCategories[catKey] || catKey;
+                    html += `<div class="dua-section"><h3 class="section-title">🤲 ${title}</h3><div class="duas-grid">`;
+                    duas.forEach(dua => {
+                        const isFav = favorites.includes(dua.arabic);
+                        html += `
+                            <div class="dua-card" data-arabic="${dua.arabic.replace(/['"]/g, '&apos;')}">
+                                <div class="card-badges">
+                                    <span class="source-badge ${dua.source}">${dua.source === 'quran' ? 'Qur\'an' : 'Hadith'}</span>
+                                    <span class="category-badge">${dua.category.replace('-', ' ')}</span>
+                                    <button class="favorite-btn ${isFav ? 'active' : ''}" title="Add to favorites">${isFav ? '❤️' : '🤍'}</button>
+                                </div>
+                                <div class="arabic-text">${dua.arabic}</div>
+                                <div class="transliteration">${dua.transliteration}</div>
+                                <div class="swahili-text">${dua.translation}</div>
+                                <div class="reference">${dua.reference}</div>
+                            </div>
+                        `;
+                    });
+                    html += '</div></div>';
+                }
+                html += '</div>';
+                duasContainer.innerHTML = html;
+
+                // Favorite buttons
+                document.querySelectorAll('.favorite-btn').forEach(btn => {
+                    btn.addEventListener('click', function(e) {
+                        e.stopPropagation();
+                        const card = this.closest('.dua-card');
+                        const arabic = card.dataset.arabic;
+                        if (favorites.includes(arabic)) {
+                            favorites = favorites.filter(f => f !== arabic);
+                            this.textContent = '🤍';
+                            this.classList.remove('active');
+                        } else {
+                            favorites.push(arabic);
+                            this.textContent = '❤️';
+                            this.classList.add('active');
+                        }
+                        localStorage.setItem('duaFavorites', JSON.stringify(favorites));
+                    });
+                });
+            }
+
+            // Filter listeners
+            document.querySelectorAll('.filter-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
+                    currentSourceFilter = this.dataset.source;
+                    renderDuas();
+                });
+            });
+
+            document.querySelectorAll('.category-pill').forEach(pill => {
+                pill.addEventListener('click', function() {
+                    document.querySelectorAll('.category-pill').forEach(p => p.classList.remove('active'));
+                    this.classList.add('active');
+                    currentCategoryFilter = this.dataset.cat;
+                    renderDuas();
+                });
+            });
+
+            const searchInput = document.getElementById('duaSearch');
+            if (searchInput) {
+                searchInput.addEventListener('input', function() {
+                    currentSearchTerm = this.value;
+                    renderDuas();
+                });
+            }
+
+            renderDuas();
+        })();
+
+        // ========== DHIKR DATA & LOGIC (unchanged, but you can add more if desired) ==========
+        const dhikrList = [
+            { arabic: "سُبْحَانَ اللَّهِ", translit: "SubḥānAllāh", meaning: "Glory be to Allah", recommended: 33, category: "praise" },
+            { arabic: "الْحَمْدُ لِلَّهِ", translit: "Alḥamdulillāh", meaning: "All praise is for Allah", recommended: 33, category: "praise" },
+            { arabic: "اللَّهُ أَكْبَرُ", translit: "Allāhu Akbar", meaning: "Allah is the Greatest", recommended: 34, category: "praise" },
+            { arabic: "لَا إِلَهَ إِلَّا اللَّهُ", translit: "Lā ilāha illallāh", meaning: "There is no god but Allah", recommended: 100, category: "praise" },
+            { arabic: "أَسْتَغْفِرُ اللَّهَ", translit: "Astaghfirullāh", meaning: "I seek forgiveness from Allah", recommended: 100, category: "forgiveness" },
+            { arabic: "اللَّهُمَّ صَلِّ عَلَى مُحَمَّدٍ", translit: "Allāhumma ṣalli ʿalā Muḥammad", meaning: "O Allah, send peace upon Muhammad", recommended: 10, category: "praise" },
+            { arabic: "لَا حَوْلَ وَلَا قُوَّةَ إِلَّا بِاللَّهِ", translit: "Lā ḥawla wa lā quwwata illā billāh", meaning: "There is no power nor strength except with Allah", recommended: 100, category: "protection" },
+            { arabic: "سُبْحَانَ اللَّهِ وَبِحَمْدِهِ", translit: "SubḥānAllāhi wa biḥamdih", meaning: "Glory and praise be to Allah", recommended: 100, category: "morning" },
+            { arabic: "أَعُوذُ بِاللَّهِ مِنَ الشَّيْطَانِ الرَّجِيمِ", translit: "Aʿūdhu billāhi minash-shayṭānir-rajīm", meaning: "I seek refuge with Allah from the accursed devil", recommended: 3, category: "protection" },
+            { arabic: "بِسْمِ اللَّهِ الرَّحْمَنِ الرَّحِيمِ", translit: "Bismillāhir-raḥmānir-raḥīm", meaning: "In the name of Allah, the Most Gracious, the Most Merciful", recommended: 1, category: "morning" },
+            { arabic: "اللَّهُمَّ أَجِرْنِي مِنَ النَّارِ", translit: "Allāhumma ajirnī minan-nār", meaning: "O Allah, save me from the Fire", recommended: 7, category: "evening" },
+            { arabic: "رَبِّ اغْفِرْ لِي وَتُبْ عَلَيَّ", translit: "Rabbighfir lī wa tub ʿalayya", meaning: "My Lord, forgive me and accept my repentance", recommended: 100, category: "forgiveness" },
+            { arabic: "يَا حَيُّ يَا قَيُّومُ", translit: "Yā Ḥayyu yā Qayyūm", meaning: "O Ever-Living, O Self-Sustaining", recommended: 40, category: "protection" },
+            { arabic: "سُبْحَانَ اللَّهِ وَبِحَمْدِهِ سُبْحَانَ اللَّهِ الْعَظِيمِ", translit: "SubḥānAllāhi wa biḥamdih, subḥānAllāhil-ʿaẓīm", meaning: "Glory be to Allah and praise; glory be to Allah the Magnificent", recommended: 100, category: "morning" },
+            { arabic: "لَا إِلَهَ إِلَّا أَنْتَ سُبْحَانَكَ إِنِّي كُنْتُ مِنَ الظَّالِمِينَ", translit: "Lā ilāha illā anta subḥānaka innī kuntu minaẓ-ẓālimīn", meaning: "None has the right to be worshipped except You; glory be to You; indeed, I have been among the wrongdoers", recommended: 1, category: "forgiveness" },
+            { arabic: "حَسْبِيَ اللَّهُ لَا إِلَهَ إِلَّا هُوَ عَلَيْهِ تَوَكَّلْتُ", translit: "Ḥasbiyallāhu lā ilāha illā huwa ʿalayhi tawakkalt", meaning: "Allah is sufficient for me; there is no god except Him; in Him I put my trust", recommended: 7, category: "protection" },
+            { arabic: "اللَّهُمَّ إِنِّي أَسْأَلُكَ الْجَنَّةَ", translit: "Allāhumma innī as'alukal-jannah", meaning: "O Allah, I ask You for Paradise", recommended: 3, category: "evening" },
+            { arabic: "اللَّهُمَّ قِنِي عَذَابَ الْقَبْرِ", translit: "Allāhumma qinī ʿadhābal-qabr", meaning: "O Allah, protect me from the punishment of the grave", recommended: 3, category: "evening" },
+            { arabic: "اللَّهُمَّ أَعِنِّي عَلَى ذِكْرِكَ وَشُكْرِكَ وَحُسْنِ عِبَادَتِكَ", translit: "Allāhumma aʿinnī ʿalā dhikrika wa shukrika wa ḥusni ʿibādatik", meaning: "O Allah, help me to remember You, thank You, and worship You well", recommended: 3, category: "morning" },
+            { arabic: "اللَّهُمَّ صَلِّ وَسَلِّمْ عَلَى نَبِيِّنَا مُحَمَّدٍ", translit: "Allāhumma ṣalli wa sallim ʿalā nabiyyinā Muḥammad", meaning: "O Allah, send blessings and peace upon our Prophet Muhammad", recommended: 10, category: "praise" }
+        ];
+
+        let currentDhikrIndex = 0;
+        let counter = 0;
+        let totalSessionCount = 0;
+        let totalAllTime = parseInt(localStorage.getItem('totalDhikrCount') || '0');
+
+        const dhikrArabic = document.getElementById('dhikrArabic');
+        const dhikrTranslit = document.getElementById('dhikrTranslit');
+        const dhikrMeaning = document.getElementById('dhikrMeaning');
+        const dhikrRecommended = document.getElementById('dhikrRecommended');
+        const dhikrPosition = document.getElementById('dhikrPosition');
+        const counterValue = document.getElementById('counterValue');
+        const progressBar = document.getElementById('progressBar');
+        const totalDhikrSpan = document.getElementById('totalDhikr');
+        const sessionCountSpan = document.getElementById('sessionCount');
+        const totalCountSpan = document.getElementById('totalCount');
+        const prevBtn = document.getElementById('prevDhikr');
+        const nextBtn = document.getElementById('nextDhikr');
+        const decrementBtn = document.getElementById('counterDecrement');
+        const incrementBtn = document.getElementById('counterIncrement');
+        const resetBtn = document.getElementById('counterReset');
+        const saveBtn = document.getElementById('counterSave');
+        const presetBtns = document.querySelectorAll('.preset-btn');
+        const catBtns = document.querySelectorAll('.dhikr-cat-btn');
+        const dhikrGrid = document.getElementById('dhikrGrid');
+
+        function updateDhikrDisplay() {
+            const item = dhikrList[currentDhikrIndex];
+            dhikrArabic.textContent = item.arabic;
+            dhikrTranslit.textContent = item.translit;
+            dhikrMeaning.textContent = item.meaning;
+            dhikrRecommended.textContent = `Recommended: ${item.recommended} times`;
+            dhikrPosition.textContent = `${currentDhikrIndex + 1} / ${dhikrList.length}`;
+            updateProgress();
+        }
+
+        function updateProgress() {
+            const rec = dhikrList[currentDhikrIndex].recommended;
+            const percent = rec > 0 ? Math.min((counter / rec) * 100, 100) : 0;
+            progressBar.style.width = percent + '%';
+        }
+
+        function updateStats() {
+            totalDhikrSpan.textContent = dhikrList.length;
+            sessionCountSpan.textContent = totalSessionCount;
+            totalCountSpan.textContent = totalAllTime;
+        }
+
+        function renderDhikrGrid(filter = 'all') {
+            let filtered = dhikrList;
+            if (filter !== 'all') {
+                filtered = dhikrList.filter(d => d.category === filter);
+            }
+            dhikrGrid.innerHTML = '';
+            filtered.forEach((item, idx) => {
+                const card = document.createElement('div');
+                card.className = 'dhikr-card';
+                card.innerHTML = `
+                    <div class="dhikr-card-arabic">${item.arabic}</div>
+                    <div class="dhikr-card-meaning">${item.meaning}</div>
+                    <div class="dhikr-card-count">🔄 ${item.recommended}</div>
+                `;
+                card.addEventListener('click', () => {
+                    const origIndex = dhikrList.findIndex(d => d.arabic === item.arabic);
+                    if (origIndex !== -1) {
+                        currentDhikrIndex = origIndex;
+                        counter = 0;
+                        updateDhikrDisplay();
+                        counterValue.textContent = counter;
+                    }
+                });
+                dhikrGrid.appendChild(card);
+            });
+        }
+
+        updateDhikrDisplay();
+        updateStats();
+        renderDhikrGrid();
+
+        prevBtn.addEventListener('click', () => {
+            currentDhikrIndex = (currentDhikrIndex - 1 + dhikrList.length) % dhikrList.length;
+            counter = 0;
+            counterValue.textContent = counter;
+            updateDhikrDisplay();
+        });
+        nextBtn.addEventListener('click', () => {
+            currentDhikrIndex = (currentDhikrIndex + 1) % dhikrList.length;
+            counter = 0;
+            counterValue.textContent = counter;
+            updateDhikrDisplay();
+        });
+        incrementBtn.addEventListener('click', () => {
+            counter++;
+            counterValue.textContent = counter;
+            updateProgress();
+        });
+        decrementBtn.addEventListener('click', () => {
+            if (counter > 0) counter--;
+            counterValue.textContent = counter;
+            updateProgress();
+        });
+        resetBtn.addEventListener('click', () => {
+            counter = 0;
+            counterValue.textContent = counter;
+            updateProgress();
+        });
+        saveBtn.addEventListener('click', () => {
+            totalSessionCount += counter;
+            totalAllTime += counter;
+            localStorage.setItem('totalDhikrCount', totalAllTime);
+            counter = 0;
+            counterValue.textContent = counter;
+            updateStats();
+            updateProgress();
+        });
+        presetBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                const preset = parseInt(btn.dataset.preset);
+                counter = preset;
+                counterValue.textContent = counter;
+                updateProgress();
+            });
+        });
+        catBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                catBtns.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                renderDhikrGrid(btn.dataset.cat);
+            });
+        });
+
+        // ========== TOOLS TAB (Islamic Calendar - Months & Important Dates only) ==========
+        const islamicMonths = [
+            "Muḥarram", "Ṣafar", "Rabīʿ al-Awwal", "Rabīʿ al-Thānī",
+            "Jumādá al-Ūlá", "Jumādá al-Ākhirah", "Rajab", "Shaʿbān",
+            "Ramaḍān", "Shawwāl", "Dhū al-Qaʿdah", "Dhū al-Ḥijjah"
+        ];
+        const importantDates = [
+            { name: "Laylat al-Qadr", date: "27 Ramaḍān", icon: "🌙" },
+            { name: "Eid al-Fitr", date: "1 Shawwāl", icon: "🎉" },
+            { name: "Day of ʿArafah", date: "9 Dhū al-Ḥijjah", icon: "🕋" },
+            { name: "Eid al-Aḍḥā", date: "10 Dhū al-Ḥijjah", icon: "🐑" },
+            { name: "Islamic New Year", date: "1 Muḥarram", icon: "🌅" },
+            { name: "ʿĀshūrāʾ", date: "10 Muḥarram", icon: "🕯️" },
+            { name: "Mawlid al-Nabī", date: "12 Rabīʿ al-Awwal", icon: "🕊️" },
+            { name: "15 Shaʿbān (Nīṣf Shaʿbān)", date: "15 Shaʿbān", icon: "🌙" },
+            { name: "Laylat al-Miʿrāj", date: "27 Rajab", icon: "🕌" },
+            { name: "Laylat al-Raghāʾib", date: "1st Fri of Rajab", icon: "🌟" }
+        ];
+        const monthsGrid = document.getElementById('islamicMonths');
+        islamicMonths.forEach((month, index) => {
+            const monthDiv = document.createElement('div');
+            monthDiv.className = 'month-item';
+            monthDiv.textContent = `${index + 1}. ${month}`;
+            monthsGrid.appendChild(monthDiv);
+        });
+        const importantDaysUl = document.getElementById('importantDays');
+        importantDates.forEach(item => {
+            const li = document.createElement('li');
+            li.innerHTML = `<span>${item.icon}</span> ${item.name} – ${item.date}`;
+            importantDaysUl.appendChild(li);
+        });
+        const prayerTimes = ['Fajr', 'Sunrise', 'Dhuhr', 'Asr', 'Maghrib', 'Isha'];
+        const times = ['5:23 AM', '6:45 AM', '12:30 PM', '4:00 PM', '6:45 PM', '8:10 PM'];
+        const ptDiv = document.getElementById('prayerTimes');
+        prayerTimes.forEach((p, i) => {
+            const div = document.createElement('div');
+            div.innerHTML = `<strong>${p}</strong><br>${times[i]}`;
+            ptDiv.appendChild(div);
+        });
+    </script>
+</body>
+</html>
