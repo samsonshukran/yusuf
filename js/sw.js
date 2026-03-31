@@ -1,4 +1,4 @@
-const CACHE_NAME = 'yusuf-v1';
+const CACHE_NAME = 'yusuf-v2';
 const urlsToCache = [
   '/',
   '/index.html',
