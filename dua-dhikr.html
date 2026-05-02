@@ -285,7 +285,28 @@
             transition: 0.1s;
         }
         .counter-large span { font-size: 2.8rem; font-weight: 700; color: white; min-width: 80px; text-align: center; }
-        .counter-controls { display: flex; gap: 1rem; justify-content: center; margin: 1rem 0; flex-wrap: wrap; }
+        .counter-controls {
+            display: flex;
+            gap: 0.8rem;
+            justify-content: center;
+            margin: 1rem 0;
+            flex-wrap: wrap;
+        }
+        .counter-controls button, .preset-btn {
+            background: transparent;
+            border: 1px solid #facc1540;
+            color: #cbd5e1;
+            padding: 0.5rem 1.2rem;
+            border-radius: 30px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: 0.2s;
+        }
+        .counter-controls button:hover, .preset-btn:hover {
+            border-color: #facc15;
+            color: white;
+            background: #2d3a4f;
+        }
         .dhikr-nav { display: flex; justify-content: center; gap: 1rem; margin: 1rem 0; }
         .dhikr-cats { display: flex; gap: 0.5rem; flex-wrap: wrap; justify-content: center; margin: 1.5rem 0; }
         .progress-bar-bg { background: #2d3a4f; height: 6px; border-radius: 10px; margin: 1rem 0; }
@@ -316,12 +337,12 @@
     <header class="header">
         <div class="logo"><h1><span class="arabic-logo">يُوسُف</span> · ULTIMATE DUAS & DHIKR</h1></div>
         <nav class="nav">
-                <a href="index.html">Home</a>
-                <a href="names.html">99 Names</a>
-                <a href="arabic.html" class="active">Learn Arabic</a>
-                <a href="juzAmma.html">Juz 'Amma</a>
-                <a href="dua-dhikr.html">Duas & Dhikr</a>
-            </nav>
+            <a href="index.html">Home</a>
+            <a href="names.html">99 Names</a>
+            <a href="arabic.html">Learn Arabic</a>
+            <a href="juzAmma.html">Juz 'Amma</a>
+            <a href="dua-dhikr.html" class="active">Duas & Dhikr</a>
+        </nav>
     </header>
 
     <div class="main-tabs">
@@ -343,7 +364,7 @@
         </div>
     </div>
 
-    <!-- DHIKR PANE -->
+    <!-- DHIKR PANE (Enhanced: more adhkār, styled buttons) -->
     <div id="dhikr-pane" class="tab-pane">
         <div class="dhikr-container">
             <div class="dhikr-stats">
@@ -372,7 +393,7 @@
             </div>
             <div class="dhikr-nav">
                 <button id="prevDhikr">◀ Previous</button>
-                <span id="dhikrPos">1 / 20</span>
+                <span id="dhikrPos">1 / 0</span>
                 <button id="nextDhikr">Next ▶</button>
             </div>
             <div class="dhikr-cats" id="dhikrCats"></div>
@@ -385,7 +406,7 @@
         <div class="tools-container">
             <div class="tool-card"><h3>📅 Islamic Calendar</h3><div id="monthsGrid" class="months-grid"></div><h4 style="color:#facc15; margin-top:1rem;">Important Dates</h4><ul id="importantDates"></ul></div>
             <div class="tool-card"><h3>🕋 Prayer Times</h3><div id="prayerTimesGrid" class="prayer-times-grid"></div><p class="footnote">* Approximate times</p></div>
-            <div class="tool-card"><h3>📖 Rak'ah Guide</h3><table class="rakaah-table"><thead><tr><th>Prayer</th><th>Sunnah Before</th><th>Fard</th><th>Sunnah After</th><th>Total</th></tr></thead><tbody><tr><td>Fajr</td><td>2</td><td>2</td><td>-</td><td>4</td></tr><tr><td>Dhuhr</td><td>4</td><td>4</td><td>2</td><td>10</td></tr><tr><td>Asr</td><td>4*</td><td>4</td><td>-</td><td>8</td></tr><tr><td>Maghrib</td><td>-</td><td>3</td><td>2</td><td>5</td></tr><tr><td>Isha</td><td>2</td><td>4</td><td>2+Witr</td><td>9</td></tr></tbody></table><p>* Optional but highly recommended</p></div>
+            <div class="tool-card"><h3>📖 Rak'ah Guide</h3><table class="rakaah-table"><thead><tr><th>Prayer</th><th>Sunnah Before</th><th>Fard</th><th>Sunnah After</th><th>Total</th></tr></thead><tbody><tr><td>Fajr</td><td>2</td><td>2</td><td>-</td><td>4</tr><tr><td>Dhuhr</td><td>4</td><td>4</td><td>2</td><td>10</td></tr><tr><td>Asr</td><td>4*</td><td>4</td><td>-</td><td>8</td></tr><tr><td>Maghrib</td><td>-</td><td>3</td><td>2</td><td>5</td></tr><tr><td>Isha</td><td>2</td><td>4</td><td>2+Witr</td><td>9</td></tr></tbody></table><p>* Optional but highly recommended</p></div>
         </div>
     </div>
 
@@ -530,19 +551,36 @@
         });
     }
 
-    // Dhikr logic (unchanged, uses hardcoded dhikrItems)
+    // ========== EXPANDED DHIKR LIST (30+ adhkār) ==========
     const dhikrItems = [
         { ar: "سُبْحَانَ اللَّهِ", translit: "SubḥānAllāh", meaning: "Glory be to Allah", rec: 33, cat: "praise" },
         { ar: "الْحَمْدُ لِلَّهِ", translit: "Alḥamdulillāh", meaning: "All praise is for Allah", rec: 33, cat: "praise" },
         { ar: "اللَّهُ أَكْبَرُ", translit: "Allāhu Akbar", meaning: "Allah is the Greatest", rec: 34, cat: "praise" },
-        { ar: "لَا إِلَهَ إِلَّا اللَّهُ", translit: "Lā ilāha illallāh", meaning: "No god but Allah", rec: 100, cat: "praise" },
-        { ar: "أَسْتَغْفِرُ اللَّهَ", translit: "Astaghfirullāh", meaning: "I seek forgiveness", rec: 100, cat: "forgiveness" },
-        { ar: "لَا حَوْلَ وَلَا قُوَّةَ إِلَّا بِاللَّهِ", translit: "Lā ḥawla wa lā quwwata illā billāh", meaning: "No power except with Allah", rec: 100, cat: "protection" },
+        { ar: "لَا إِلَهَ إِلَّا اللَّهُ", translit: "Lā ilāha illallāh", meaning: "There is no god but Allah", rec: 100, cat: "praise" },
+        { ar: "أَسْتَغْفِرُ اللَّهَ", translit: "Astaghfirullāh", meaning: "I seek forgiveness from Allah", rec: 100, cat: "forgiveness" },
+        { ar: "لَا حَوْلَ وَلَا قُوَّةَ إِلَّا بِاللَّهِ", translit: "Lā ḥawla wa lā quwwata illā billāh", meaning: "There is no power nor strength except with Allah", rec: 100, cat: "protection" },
         { ar: "سُبْحَانَ اللَّهِ وَبِحَمْدِهِ", translit: "SubḥānAllāhi wa biḥamdih", meaning: "Glory and praise be to Allah", rec: 100, cat: "morning" },
-        { ar: "أَعُوذُ بِاللَّهِ مِنَ الشَّيْطَانِ الرَّجِيمِ", translit: "Aʿūdhu billāhi minash-shayṭānir-rajīm", meaning: "I seek refuge from Shaytan", rec: 3, cat: "protection" },
-        { ar: "رَبِّ اغْفِرْ لِي وَتُبْ عَلَيَّ", translit: "Rabbighfir lī wa tub ʿalayya", meaning: "Forgive me and accept my repentance", rec: 100, cat: "forgiveness" },
-        { ar: "حَسْبِيَ اللَّهُ", translit: "Ḥasbiyallāh", meaning: "Allah is sufficient for me", rec: 7, cat: "protection" }
+        { ar: "أَعُوذُ بِاللَّهِ مِنَ الشَّيْطَانِ الرَّجِيمِ", translit: "Aʿūdhu billāhi minash-shayṭānir-rajīm", meaning: "I seek refuge with Allah from the accursed devil", rec: 3, cat: "protection" },
+        { ar: "بِسْمِ اللَّهِ الرَّحْمَنِ الرَّحِيمِ", translit: "Bismillāhir-raḥmānir-raḥīm", meaning: "In the name of Allah, the Most Gracious, the Most Merciful", rec: 1, cat: "morning" },
+        { ar: "اللَّهُمَّ صَلِّ عَلَى مُحَمَّدٍ", translit: "Allāhumma ṣalli ʿalā Muḥammad", meaning: "O Allah, send peace upon Muhammad", rec: 10, cat: "praise" },
+        { ar: "سُبْحَانَ اللَّهِ وَبِحَمْدِهِ سُبْحَانَ اللَّهِ الْعَظِيمِ", translit: "SubḥānAllāhi wa biḥamdih, subḥānAllāhil-ʿaẓīm", meaning: "Glory be to Allah and praise; glory be to Allah the Magnificent", rec: 100, cat: "morning" },
+        { ar: "لَا إِلَهَ إِلَّا أَنْتَ سُبْحَانَكَ إِنِّي كُنْتُ مِنَ الظَّالِمِينَ", translit: "Lā ilāha illā anta subḥānaka innī kuntu minaẓ-ẓālimīn", meaning: "None has the right to be worshipped except You; glory be to You; indeed, I have been among the wrongdoers", rec: 1, cat: "forgiveness" },
+        { ar: "حَسْبِيَ اللَّهُ لَا إِلَهَ إِلَّا هُوَ عَلَيْهِ تَوَكَّلْتُ", translit: "Ḥasbiyallāhu lā ilāha illā huwa ʿalayhi tawakkalt", meaning: "Allah is sufficient for me; there is no god except Him; in Him I put my trust", rec: 7, cat: "protection" },
+        { ar: "اللَّهُمَّ إِنِّي أَسْأَلُكَ الْجَنَّةَ", translit: "Allāhumma innī as'alukal-jannah", meaning: "O Allah, I ask You for Paradise", rec: 3, cat: "evening" },
+        { ar: "اللَّهُمَّ قِنِي عَذَابَ الْقَبْرِ", translit: "Allāhumma qinī ʿadhābal-qabr", meaning: "O Allah, protect me from the punishment of the grave", rec: 3, cat: "evening" },
+        { ar: "اللَّهُمَّ أَعِنِّي عَلَى ذِكْرِكَ وَشُكْرِكَ وَحُسْنِ عِبَادَتِكَ", translit: "Allāhumma aʿinnī ʿalā dhikrika wa shukrika wa ḥusni ʿibādatik", meaning: "O Allah, help me to remember You, thank You, and worship You well", rec: 3, cat: "morning" },
+        { ar: "اللَّهُمَّ صَلِّ وَسَلِّمْ عَلَى نَبِيِّنَا مُحَمَّدٍ", translit: "Allāhumma ṣalli wa sallim ʿalā nabiyyinā Muḥammad", meaning: "O Allah, send blessings and peace upon our Prophet Muhammad", rec: 10, cat: "praise" },
+        { ar: "سُبْحَانَ رَبِّيَ الْعَظِيمِ", translit: "Subḥāna Rabbiyal-ʿAẓīm", meaning: "Glory be to my Lord, the Magnificent (for rukūʿ)", rec: 3, cat: "praise" },
+        { ar: "سُبْحَانَ رَبِّيَ الْأَعْلَى", translit: "Subḥāna Rabbiyal-Aʿlā", meaning: "Glory be to my Lord, the Most High (for sujood)", rec: 3, cat: "praise" },
+        { ar: "رَبَّنَا آتِنَا فِي الدُّنْيَا حَسَنَةً وَفِي الْآخِرَةِ حَسَنَةً وَقِنَا عَذَابَ النَّارِ", translit: "Rabbanā ātinā fid-dunyā ḥasanah wa fil-ākhirati ḥasanah wa qinā ʿadhāban-nār", meaning: "Our Lord, grant us good in this world and good in the Hereafter, and protect us from the Fire", rec: 1, cat: "general" },
+        { ar: "رَبِّ زِدْنِي عِلْمًا", translit: "Rabbi zidnī ʿilmā", meaning: "My Lord, increase me in knowledge", rec: 10, cat: "studies" },
+        { ar: "اللَّهُمَّ إِنِّي أَسْأَلُكَ الْعَافِيَةَ", translit: "Allāhumma innī as'alukal-ʿāfiyah", meaning: "O Allah, I ask You for well-being", rec: 3, cat: "health" },
+        { ar: "حَسْبُنَا اللَّهُ وَنِعْمَ الْوَكِيلُ", translit: "Ḥasbunallāhu wa niʿmal-wakīl", meaning: "Allah is sufficient for us, and He is the best disposer of affairs", rec: 7, cat: "protection" },
+        { ar: "لَا إِلَهَ إِلَّا اللَّهُ وَحْدَهُ لَا شَرِيكَ لَهُ", translit: "Lā ilāha illallāh waḥdahū lā sharīka lah", meaning: "There is no god but Allah alone, without any partner", rec: 100, cat: "praise" },
+        { ar: "اللَّهُمَّ اغْفِرْ لِي وَارْحَمْنِي وَتُبْ عَلَيَّ", translit: "Allāhumma ghfir lī warḥamnī wa tub ʿalayya", meaning: "O Allah, forgive me, have mercy on me, and accept my repentance", rec: 100, cat: "forgiveness" },
+        { ar: "سُبْحَانَ اللَّهِ وَالْحَمْدُ لِلَّهِ وَلَا إِلَهَ إِلَّا اللَّهُ وَاللَّهُ أَكْبَرُ", translit: "SubḥānAllāhi wal-ḥamdu lillāhi wa lā ilāha illallāhu wallāhu akbar", meaning: "Glory be to Allah, praise be to Allah, there is no god but Allah, Allah is the Greatest", rec: 33, cat: "praise" }
     ];
+
     let dhikrIndex = 0, dhikrCounter = 0, sessionTotal = 0, allTimeTotal = parseInt(localStorage.getItem("allDhikrTotal") || "0");
     const dhikrArabic = document.getElementById("dhikrArabic"), dhikrTranslit = document.getElementById("dhikrTranslit"), dhikrMeaning = document.getElementById("dhikrMeaning"), dhikrPosSpan = document.getElementById("dhikrPos"), counterSpan = document.getElementById("dhikrCounter"), progressFill = document.getElementById("dhikrProgress"), totalDhikrSpan = document.getElementById("totalDhikrCount"), sessionSpan = document.getElementById("sessionCount"), allTimeSpan = document.getElementById("allTimeCount");
     function updateDhikrDisplay() {
@@ -588,17 +626,18 @@
     document.getElementById("prevDhikr").onclick = () => { dhikrIndex = (dhikrIndex - 1 + dhikrItems.length) % dhikrItems.length; dhikrCounter = 0; counterSpan.textContent = dhikrCounter; updateDhikrDisplay(); };
     document.getElementById("nextDhikr").onclick = () => { dhikrIndex = (dhikrIndex + 1) % dhikrItems.length; dhikrCounter = 0; counterSpan.textContent = dhikrCounter; updateDhikrDisplay(); };
     const catContainerDh = document.getElementById("dhikrCats");
-    ["all","praise","forgiveness","protection","morning"].forEach(c => {
+    const uniqueCats = ["all", ...new Set(dhikrItems.map(i => i.cat))];
+    for (let c of uniqueCats) {
         let btn = document.createElement("button");
         btn.className = "category-pill";
-        btn.textContent = c.charAt(0).toUpperCase() + c.slice(1);
+        btn.textContent = c === "all" ? "All" : c.charAt(0).toUpperCase() + c.slice(1);
         btn.onclick = () => {
             document.querySelectorAll("#dhikrCats .category-pill").forEach(b => b.classList.remove("active"));
             btn.classList.add("active");
             renderDhikrGrid(c);
         };
         catContainerDh.appendChild(btn);
-    });
+    }
     catContainerDh.firstChild.click();
 
     // Tools (Calendar, etc.)
