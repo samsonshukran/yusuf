@@ -308,11 +308,54 @@
             background: #2d3a4f;
         }
         .dhikr-nav { display: flex; justify-content: center; gap: 1rem; margin: 1rem 0; }
+        .dhikr-nav button {
+            background: transparent;
+            border: 1px solid #facc1540;
+            color: #cbd5e1;
+            padding: 0.5rem 1.2rem;
+            border-radius: 30px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: 0.2s;
+        }
+        .dhikr-nav button:hover {
+            border-color: #facc15;
+            color: white;
+            background: #2d3a4f;
+        }
         .dhikr-cats { display: flex; gap: 0.5rem; flex-wrap: wrap; justify-content: center; margin: 1.5rem 0; }
         .progress-bar-bg { background: #2d3a4f; height: 6px; border-radius: 10px; margin: 1rem 0; }
         .progress-fill { background: linear-gradient(90deg, #facc15, #4ade80); height: 100%; width: 0%; border-radius: 10px; transition: width 0.2s; }
 
-        /* Tools */
+        /* Tools - enhanced with additional cards */
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+        .info-card {
+            background: #1e2a3a;
+            border-radius: 24px;
+            padding: 1rem;
+            border: 1px solid #2d3a4f;
+        }
+        .info-card h4 {
+            color: #facc15;
+            margin-bottom: 0.5rem;
+            font-size: 1.1rem;
+        }
+        .qibla-direction {
+            font-size: 1.5rem;
+            text-align: center;
+            margin: 0.5rem 0;
+        }
+        .random-name {
+            font-family: 'Amiri', serif;
+            font-size: 1.8rem;
+            text-align: center;
+            color: #facc15;
+        }
         .months-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(100px,1fr)); gap: 0.5rem; margin: 1rem 0; }
         .month-item { background: #1e2a3a; padding: 0.5rem; border-radius: 12px; text-align: center; font-size: 0.85rem; border: 1px solid #2d3a4f; }
         .prayer-times-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(85px,1fr)); gap: 0.5rem; }
@@ -364,7 +407,7 @@
         </div>
     </div>
 
-    <!-- DHIKR PANE (Enhanced: more adhkār, styled buttons) -->
+    <!-- DHIKR PANE -->
     <div id="dhikr-pane" class="tab-pane">
         <div class="dhikr-container">
             <div class="dhikr-stats">
@@ -401,12 +444,36 @@
         </div>
     </div>
 
-    <!-- TOOLS PANE -->
+    <!-- TOOLS PANE (Enhanced) -->
     <div id="tools-pane" class="tab-pane">
         <div class="tools-container">
+            <!-- Extra Info Grid -->
+            <div class="info-grid">
+                <div class="info-card">
+                    <h4>🕋 Qibla Direction</h4>
+                    <div class="qibla-direction">~ 130° SE (from most locations)</div>
+                    <p style="font-size:0.8rem;">Adjust based on your local mosque or compass app.</p>
+                </div>
+                <div class="info-card">
+                    <h4>🌙 Tahajjud Time</h4>
+                    <p>The last third of the night – the time when Allah descends to the lowest heaven and asks: "Who is asking Me so I may give?"</p>
+                </div>
+                <div class="info-card">
+                    <h4>📖 Random Name of Allah</h4>
+                    <div class="random-name" id="randomNameArabic">الرحمن</div>
+                    <div class="transliteration-text" style="font-size:0.9rem; text-align:center;" id="randomNameTranslit">Ar-Raḥmān</div>
+                    <div style="font-size:0.85rem; text-align:center;" id="randomNameMeaning">The Most Gracious</div>
+                </div>
+                <div class="info-card">
+                    <h4>✨ Daily Sunnah Tip</h4>
+                    <p id="dailySunnahTip">Smiling is a charity (ṣadaqah).</p>
+                </div>
+            </div>
+
+            <!-- Existing Calendar Card -->
             <div class="tool-card"><h3>📅 Islamic Calendar</h3><div id="monthsGrid" class="months-grid"></div><h4 style="color:#facc15; margin-top:1rem;">Important Dates</h4><ul id="importantDates"></ul></div>
             <div class="tool-card"><h3>🕋 Prayer Times</h3><div id="prayerTimesGrid" class="prayer-times-grid"></div><p class="footnote">* Approximate times</p></div>
-            <div class="tool-card"><h3>📖 Rak'ah Guide</h3><table class="rakaah-table"><thead><tr><th>Prayer</th><th>Sunnah Before</th><th>Fard</th><th>Sunnah After</th><th>Total</th></tr></thead><tbody><tr><td>Fajr</td><td>2</td><td>2</td><td>-</td><td>4</tr><tr><td>Dhuhr</td><td>4</td><td>4</td><td>2</td><td>10</td></tr><tr><td>Asr</td><td>4*</td><td>4</td><td>-</td><td>8</td></tr><tr><td>Maghrib</td><td>-</td><td>3</td><td>2</td><td>5</td></tr><tr><td>Isha</td><td>2</td><td>4</td><td>2+Witr</td><td>9</td></tr></tbody></table><p>* Optional but highly recommended</p></div>
+            <div class="tool-card"><h3>📖 Rak'ah Guide (Obligatory & Sunnah)</h3><table class="rakaah-table"><thead><tr><th>Prayer</th><th>Sunnah Before</th><th>Fard</th><th>Sunnah After</th><th>Total</th></tr></thead><tbody><tr></tr>Fajr\n    2\n    2\n    -\n    4\n    <tr><tr><td>Dhuhr</td><td>4</td><td>4</td><td>2</td><td>10</td></tr><tr><td>Asr</td><td>4*</td><td>4</td><td>-</td><td>8</td></tr><tr><td>Maghrib</td><td>-</td><td>3</td><td>2</td><td>5</td></tr><tr><td>Isha</td><td>2</td><td>4</td><td>2+Witr</td><td>9</td></tr></tbody></table><p class="footnote">* Optional but highly recommended</p></div>
         </div>
     </div>
 
@@ -640,7 +707,7 @@
     }
     catContainerDh.firstChild.click();
 
-    // Tools (Calendar, etc.)
+    // Tools: Islamic Calendar & Important Dates
     const hijriMonths = ["Muḥarram","Ṣafar","Rabīʿ al-Awwal","Rabīʿ al-Thānī","Jumādá al-Ūlá","Jumādá al-Ākhirah","Rajab","Shaʿbān","Ramaḍān","Shawwāl","Dhū al-Qaʿdah","Dhū al-Ḥijjah"];
     const monthsGrid = document.getElementById("monthsGrid");
     hijriMonths.forEach((m,i) => { let d = document.createElement("div"); d.className = "month-item"; d.textContent = `${i+1}. ${m}`; monthsGrid.appendChild(d); });
@@ -652,6 +719,35 @@
     const ptGrid = document.getElementById("prayerTimesGrid");
     prayers.forEach((p,i) => { let div = document.createElement("div"); div.className = "prayer-time"; div.innerHTML = `<strong>${p}</strong><br>${times[i]} ${i===0||i===4?'AM':'PM'}`; ptGrid.appendChild(div); });
 
+    // Random Name of Allah (using namesData if available, otherwise fallback)
+    function updateRandomName() {
+        if (window.namesData && window.namesData.length) {
+            const randomIndex = Math.floor(Math.random() * window.namesData.length);
+            const name = window.namesData[randomIndex];
+            document.getElementById("randomNameArabic").innerText = name.arabic;
+            document.getElementById("randomNameTranslit").innerText = name.transliteration;
+            document.getElementById("randomNameMeaning").innerText = name.meaning;
+        } else {
+            // fallback
+            document.getElementById("randomNameArabic").innerText = "الرحمن";
+            document.getElementById("randomNameTranslit").innerText = "Ar-Raḥmān";
+            document.getElementById("randomNameMeaning").innerText = "The Most Gracious";
+        }
+    }
+    // Daily Sunnah Tip rotation
+    const sunnahTips = [
+        "Smiling is a charity (ṣadaqah).", "Saying 'Bismillāh' before eating brings barakah.", "Using a siwak is a Sunnah before prayer.",
+        "Visiting the sick has a great reward.", "Reciting Sūrah al-Kahf on Fridays brings light.", "Sleeping in a state of wuḍūʾ is recommended.",
+        "The du'a before sleeping: 'Bismika Allāhumma amūtu wa aḥyā'.", "The best of you are those who learn the Qur'an and teach it.",
+        "Three people will be shaded on the Day of Judgment: two who love each other for Allah's sake, a young man who grew up worshipping Allah, and one who gives charity so secretly that the left hand does not know what the right hand gave."
+    ];
+    function updateSunnahTip() {
+        const randomTip = sunnahTips[Math.floor(Math.random() * sunnahTips.length)];
+        document.getElementById("dailySunnahTip").innerText = randomTip;
+    }
+    updateRandomName();
+    updateSunnahTip();
+
     // Tab switching
     document.querySelectorAll(".tab-btn").forEach(btn => {
         btn.addEventListener("click", () => {
@@ -660,6 +756,10 @@
             btn.classList.add("active");
             document.querySelectorAll(".tab-pane").forEach(p => p.classList.remove("active"));
             document.getElementById(`${tab}-pane`).classList.add("active");
+            if (tab === "tools") {
+                updateRandomName();
+                updateSunnahTip();
+            }
         });
     });
 
