@@ -1,5 +1,10 @@
-// ===== MAIN.JS – Core App Logic (Home, Names, Dhikr, Duas, Juz Amma) =====
+// ===== MAIN.JS – Core App Logic with Global Progress Tracking =====
 // Arabic learning functions are now in arabic.js
+
+// Constants for progress totals (used on home page)
+const TOTAL_NAMES = 99;
+const TOTAL_SURAHS = 37;
+const TOTAL_DUAS = 200; // approximate total of duas in the app (Quran + Hadith)
 
 // Wait for DOM to load
 document.addEventListener('DOMContentLoaded', function() {
@@ -7,6 +12,9 @@ document.addEventListener('DOMContentLoaded', function() {
 
     const currentPage = window.location.pathname.split('/').pop() || 'index.html';
     console.log('Current page:', currentPage);
+
+    // Initialize global progress (load from storage)
+    initGlobalProgress();
 
     try {
         if (currentPage === 'index.html' || currentPage === '') {
@@ -36,6 +44,92 @@ document.addEventListener('DOMContentLoaded', function() {
     // Run data check after a delay
     setTimeout(checkDataLoaded, 1000);
 });
+
+// ==================== GLOBAL PROGRESS TRACKING ====================
+let globalProgress = {
+    namesViewed: [],      // array of name indices (or arabic names)
+    surahsMemorized: [],  // array of surah indices
+    duasRead: [],         // array of dua identifiers
+    totalDhikr: 0         // total dhikr count (from counter)
+};
+
+function initGlobalProgress() {
+    const saved = localStorage.getItem('samkran_global_progress');
+    if (saved) {
+        try {
+            const parsed = JSON.parse(saved);
+            globalProgress = { ...globalProgress, ...parsed };
+        } catch(e) { console.error('Failed to parse progress'); }
+    }
+    // Also sync with existing localStorage items (e.g., totalDhikrCount, etc.)
+    const totalDhikr = localStorage.getItem('totalDhikrCount');
+    if (totalDhikr) globalProgress.totalDhikr = parseInt(totalDhikr) || 0;
+    saveGlobalProgress();
+}
+
+function saveGlobalProgress() {
+    localStorage.setItem('samkran_global_progress', JSON.stringify(globalProgress));
+}
+
+function markNameViewed(index) {
+    if (!globalProgress.namesViewed.includes(index)) {
+        globalProgress.namesViewed.push(index);
+        saveGlobalProgress();
+        updateGlobalProgressUI();
+        return true;
+    }
+    return false;
+}
+
+function markSurahMemorized(index, memorized) {
+    if (memorized && !globalProgress.surahsMemorized.includes(index)) {
+        globalProgress.surahsMemorized.push(index);
+        saveGlobalProgress();
+        updateGlobalProgressUI();
+    } else if (!memorized && globalProgress.surahsMemorized.includes(index)) {
+        globalProgress.surahsMemorized = globalProgress.surahsMemorized.filter(i => i !== index);
+        saveGlobalProgress();
+        updateGlobalProgressUI();
+    }
+}
+
+function markDuaRead(duaId) {
+    if (!globalProgress.duasRead.includes(duaId)) {
+        globalProgress.duasRead.push(duaId);
+        saveGlobalProgress();
+        updateGlobalProgressUI();
+    }
+}
+
+function updateGlobalProgressUI() {
+    // Use constants for totals (safe on any page)
+    const namesViewedCount = globalProgress.namesViewed.length;
+    const surahsMemorizedCount = globalProgress.surahsMemorized.length;
+    const duasReadCount = globalProgress.duasRead.length;
+
+    const namesPercent = Math.min(100, Math.round((namesViewedCount / TOTAL_NAMES) * 100)) || 0;
+    const surahsPercent = Math.min(100, Math.round((surahsMemorizedCount / TOTAL_SURAHS) * 100)) || 0;
+    const duasPercent = Math.min(100, Math.round((duasReadCount / TOTAL_DUAS) * 100)) || 0;
+
+    // Update elements if they exist
+    const namesProgressEl = document.getElementById('globalNamesProgress');
+    if (namesProgressEl) namesProgressEl.style.width = namesPercent + '%';
+    const namesCountEl = document.getElementById('globalNamesCount');
+    if (namesCountEl) namesCountEl.innerText = `${namesViewedCount}/${TOTAL_NAMES}`;
+
+    const surahsProgressEl = document.getElementById('globalSurahsProgress');
+    if (surahsProgressEl) surahsProgressEl.style.width = surahsPercent + '%';
+    const surahsCountEl = document.getElementById('globalSurahsCount');
+    if (surahsCountEl) surahsCountEl.innerText = `${surahsMemorizedCount}/${TOTAL_SURAHS}`;
+
+    const duasProgressEl = document.getElementById('globalDuasProgress');
+    if (duasProgressEl) duasProgressEl.style.width = duasPercent + '%';
+    const duasCountEl = document.getElementById('globalDuasCount');
+    if (duasCountEl) duasCountEl.innerText = `${duasReadCount}/${TOTAL_DUAS}`;
+
+    const dhikrCountEl = document.getElementById('globalDhikrCount');
+    if (dhikrCountEl) dhikrCountEl.innerText = globalProgress.totalDhikr;
+}
 
 // ===== SAFE DATA ACCESS FUNCTIONS =====
 function getNamesData() {
@@ -110,6 +204,9 @@ function initHomePage() {
     } else {
         console.warn('arabicWords not available');
     }
+
+    // Update global UI (progress bars)
+    updateGlobalProgressUI();
 }
 
 // ===== NAMES PAGE =====
@@ -137,6 +234,7 @@ function renderNamesGrid() {
 
     namesData.forEach((name, index) => {
         if (!name) return;
+        const isViewed = globalProgress.namesViewed.includes(index);
         const card = document.createElement('div');
         card.className = 'name-card';
         card.dataset.index = index;
@@ -144,7 +242,7 @@ function renderNamesGrid() {
             <div class="arabic-name">${name.arabic || ''}</div>
             <div class="transliteration">${name.transliteration || ''}</div>
             <div class="meaning">${name.meaning || ''}</div>
-            <div class="badge" style="align-self: center;">click for details</div>
+            <div class="badge" style="align-self: center;">${isViewed ? '✓ Viewed' : 'click for details'}</div>
         `;
         card.addEventListener('click', () => showNameDetail(index));
         gridContainer.appendChild(card);
@@ -164,6 +262,9 @@ function showNameDetail(index) {
 
     const name = namesData[index];
     window.currentNameIndex = index;
+
+    // Mark as viewed
+    markNameViewed(index);
 
     const grid = document.getElementById('namesGrid');
     const detail = document.getElementById('nameDetail');
@@ -196,6 +297,9 @@ function showNameDetail(index) {
         const savedNote = localStorage.getItem(`nameNote_${index}`);
         personalNoteEl.value = savedNote || '';
     }
+
+    // Re-render grid to update viewed badges
+    renderNamesGrid();
 }
 
 function setupNameDetailView() {
@@ -206,6 +310,7 @@ function setupNameDetailView() {
             const detail = document.getElementById('nameDetail');
             if (grid) grid.classList.remove('hidden');
             if (detail) detail.classList.add('hidden');
+            renderNamesGrid(); // refresh badges
         });
     }
 
@@ -294,6 +399,10 @@ function initSlideshowCounter() {
         plusBtn.addEventListener('click', function() {
             count++;
             if (counterValue) counterValue.innerText = count;
+            globalProgress.totalDhikr += 1;
+            localStorage.setItem('totalDhikrCount', globalProgress.totalDhikr);
+            updateGlobalProgressUI();
+            saveGlobalProgress();
         });
     }
     if (resetBtn) {
@@ -354,6 +463,13 @@ function initSingleCounter(prefix, defaultValue) {
             let val = parseInt(valueEl.innerText) || 0;
             val = val >= defaultValue ? 0 : val + 1;
             valueEl.innerText = val;
+            // Update global dhikr count if we are on a page that uses these counters (home page)
+            if (prefix === 'subhan' || prefix === 'hamd' || prefix === 'akbar') {
+                globalProgress.totalDhikr += 1;
+                localStorage.setItem('totalDhikrCount', globalProgress.totalDhikr);
+                updateGlobalProgressUI();
+                saveGlobalProgress();
+            }
         });
     }
     if (resetBtn) {
@@ -374,6 +490,8 @@ function initDuaPage() {
     if (typeof window.initDuaSystem === 'function') {
         try {
             window.initDuaSystem();
+            // Hook into favorite or view events to mark dua as read
+            hookDuaReadTracking();
         } catch (error) {
             console.error('Error initializing dua system:', error);
         }
@@ -389,13 +507,25 @@ function initDuaPage() {
     }
 }
 
+function hookDuaReadTracking() {
+    // This will be called after initDuaSystem; we can observe clicks on dua cards
+    document.addEventListener('click', function(e) {
+        const duaCard = e.target.closest('.dua-card');
+        if (duaCard) {
+            const duaId = duaCard.dataset.duaId || duaCard.innerText.slice(0, 50);
+            markDuaRead(duaId);
+        }
+    });
+}
+
 function renderSimpleDuas(duas) {
     const grid = document.getElementById('duasGrid');
     if (!grid) return;
     grid.innerHTML = '';
-    duas.slice(0, 10).forEach(dua => {
+    duas.slice(0, 20).forEach((dua, idx) => {
         const card = document.createElement('div');
         card.className = 'dua-card';
+        card.dataset.duaId = idx;
         card.innerHTML = `
             <div class="arabic-text">${dua.arabic || ''}</div>
             <div class="transliteration">${dua.transliteration || ''}</div>
@@ -415,6 +545,11 @@ function initJuzAmmaPage() {
     if (typeof window.initJuzAmma === 'function') {
         try {
             window.initJuzAmma();
+            // Hook into memorization events (the juzAmma.js likely has a function toggleMemorized)
+            // We'll expose a global to detect changes
+            window.updateSurahMemorized = function(surahIndex, isMemorized) {
+                markSurahMemorized(surahIndex, isMemorized);
+            };
         } catch (error) {
             console.error('Error initializing Juz Amma:', error);
         }
@@ -442,6 +577,7 @@ function checkDataLoaded() {
     console.log('juzAmmaData:', getJuzAmmaData() ? `✅ Loaded (${getJuzAmmaData().length})` : '❌ NOT LOADED');
     console.log('quranDuas:', getQuranDuas() ? `✅ Loaded (${getQuranDuas().length})` : '❌ NOT LOADED');
     console.log('hadithDuas:', getHadithDuas() ? `✅ Loaded (${getHadithDuas().length})` : '❌ NOT LOADED');
+    console.log('Global progress:', globalProgress);
     console.log('=======================');
 }
 
@@ -525,7 +661,7 @@ window.clearAppCache = async function() {
     }
 };
 
-// ===== EXPORT GLOBAL FUNCTIONS =====
+// Export global functions to window
 window.initHomePage = initHomePage;
 window.renderNamesGrid = renderNamesGrid;
 window.initNamesPage = initNamesPage;
@@ -533,5 +669,9 @@ window.initJuzAmmaPage = initJuzAmmaPage;
 window.initDuaPage = initDuaPage;
 window.checkDataLoaded = checkDataLoaded;
 window.clearAppCache = clearAppCache;
+window.markNameViewed = markNameViewed;
+window.markSurahMemorized = markSurahMemorized;
+window.markDuaRead = markDuaRead;
+window.updateGlobalProgressUI = updateGlobalProgressUI;
 
-console.log('✅ main.js loaded (core app logic)');
+console.log('✅ main.js loaded with global progress tracking');

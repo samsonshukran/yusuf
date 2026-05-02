@@ -17,12 +17,6 @@
   <meta name="apple-mobile-web-app-title" content="Samkran Ilm">
   <link rel="apple-touch-icon" href="icons/icon-192.png">
   <link rel="mask-icon" href="icons/icon-512.svg" color="#facc15">
-
-  <!-- PWA Install Button -->
-  <button id="installBtn" class="install-btn" style="display: none;">
-    <span class="install-icon">📲</span>
-    <span class="install-text">Install App</span>
-  </button>
 </head>
 <body>
   <div class="container">
@@ -124,19 +118,32 @@
         </div>
       </div>
 
-      <!-- Quick Stats Row -->
+      <!-- GLOBAL PROGRESS STATS (enhanced) -->
       <div class="stats-row">
         <div class="stat-card">
-          <span class="stat-value" id="totalNamesCount">99</span>
-          <span class="stat-label">Names of Allah</span>
+          <span class="stat-value" id="globalNamesCount">0/99</span>
+          <span class="stat-label">Names of Allah viewed</span>
+          <div class="progress-bar-container" style="margin-top: 0.5rem;">
+            <div class="progress-bar-fill" id="globalNamesProgress" style="width: 0%;"></div>
+          </div>
         </div>
         <div class="stat-card">
-          <span class="stat-value" id="totalWordsCount">300+</span>
-          <span class="stat-label">Qur'anic Words</span>
+          <span class="stat-value" id="globalSurahsCount">0/37</span>
+          <span class="stat-label">Surahs memorized</span>
+          <div class="progress-bar-container" style="margin-top: 0.5rem;">
+            <div class="progress-bar-fill" id="globalSurahsProgress" style="width: 0%;"></div>
+          </div>
         </div>
         <div class="stat-card">
-          <span class="stat-value" id="totalPhrasesCount">100+</span>
-          <span class="stat-label">Islamic Phrases</span>
+          <span class="stat-value" id="globalDuasCount">0/200</span>
+          <span class="stat-label">Duas read</span>
+          <div class="progress-bar-container" style="margin-top: 0.5rem;">
+            <div class="progress-bar-fill" id="globalDuasProgress" style="width: 0%;"></div>
+          </div>
+        </div>
+        <div class="stat-card">
+          <span class="stat-value" id="globalDhikrCount">0</span>
+          <span class="stat-label">Total Dhikr Count</span>
         </div>
       </div>
     </main>
@@ -146,44 +153,43 @@
     </footer>
   </div>
 
-  <!-- Scripts - Updated with correct file names -->
+  <!-- PWA Install Button (only one) -->
+  <div id="install-btn" style="display: none; position: fixed; bottom: 20px; left: 20px; right: 20px; background: #facc15; color: #0f172a; text-align: center; padding: 15px; border-radius: 50px; font-weight: bold; cursor: pointer; z-index: 1000;">
+    📲 Install App
+  </div>
+
+  <!-- Scripts -->
   <script src="js/namesData.js"></script>
   <script src="js/arabic-data.js"></script>
   <script src="js/main.js"></script>
 
   <script>
-  if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.register('/sw.js')
-      .then(reg => console.log('✅ Service Worker registered'))
-      .catch(err => console.log('❌ Service Worker error:', err));
-  }
-</script>
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('/sw.js')
+        .then(reg => console.log('✅ Service Worker registered'))
+        .catch(err => console.log('❌ Service Worker error:', err));
+    }
 
-<div id="install-btn" style="display: none; position: fixed; bottom: 20px; left: 20px; right: 20px; background: #facc15; color: #0f172a; text-align: center; padding: 15px; border-radius: 50px; font-weight: bold; cursor: pointer; z-index: 1000;">
-  📲 Install App
-</div>
-
-<script>
-  let deferredPrompt;
-  const installBtn = document.getElementById('install-btn');
-  
-  window.addEventListener('beforeinstallprompt', (e) => {
-    e.preventDefault();
-    deferredPrompt = e;
-    installBtn.style.display = 'block';
-  });
-  
-  installBtn.addEventListener('click', async () => {
-    if (!deferredPrompt) return;
-    installBtn.style.display = 'none';
-    deferredPrompt.prompt();
-    const { outcome } = await deferredPrompt.userChoice;
-    console.log('Install result:', outcome);
-  });
-  
-  window.addEventListener('appinstalled', () => {
-    installBtn.style.display = 'none';
-  });
-</script>
+    let deferredPrompt;
+    const installBtn = document.getElementById('install-btn');
+    
+    window.addEventListener('beforeinstallprompt', (e) => {
+      e.preventDefault();
+      deferredPrompt = e;
+      installBtn.style.display = 'block';
+    });
+    
+    installBtn.addEventListener('click', async () => {
+      if (!deferredPrompt) return;
+      installBtn.style.display = 'none';
+      deferredPrompt.prompt();
+      const { outcome } = await deferredPrompt.userChoice;
+      console.log('Install result:', outcome);
+    });
+    
+    window.addEventListener('appinstalled', () => {
+      installBtn.style.display = 'none';
+    });
+  </script>
 </body>
 </html>

@@ -16,6 +16,7 @@ let viewedLetters = [];
 let viewedWords = [];
 let viewedPhrases = [];
 let viewedConversations = [];
+let viewedVideos = [];         // NEW: store watched video names
 
 // Qur'an dictionary specific
 let quranDictionaryWords = [];
@@ -48,7 +49,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // Load Qur'an dictionary from JSON
     loadQuranDictionary();
     
-    // Render videos
+    // Render videos (with progress tracking)
     renderVideos();
 
     // Attach event listeners to buttons (to replace inline onclick)
@@ -115,6 +116,10 @@ function attachEventListeners() {
     // Conversation topic
     const conversationTopic = document.getElementById('conversationTopic');
     if (conversationTopic) conversationTopic.addEventListener('change', () => renderConversations());
+
+    // NEW: Video progress reset button
+    const resetVideoBtn = document.getElementById('resetVideoProgress');
+    if (resetVideoBtn) resetVideoBtn.addEventListener('click', resetVideoProgress);
 }
 
 // ===== PROGRESS TRACKING =====
@@ -127,6 +132,7 @@ function loadLearningProgress() {
             viewedWords = progress.viewedWords || [];
             viewedPhrases = progress.viewedPhrases || [];
             viewedConversations = progress.viewedConversations || [];
+            viewedVideos = progress.viewedVideos || [];   // load video progress
             updateAllProgress();
         } catch (e) {
             console.error('Error loading progress:', e);
@@ -139,7 +145,8 @@ function saveLearningProgress() {
         viewedLetters,
         viewedWords,
         viewedPhrases,
-        viewedConversations
+        viewedConversations,
+        viewedVideos
     };
     localStorage.setItem('arabicLearningProgress', JSON.stringify(progress));
     updateAllProgress();
@@ -186,47 +193,148 @@ function updateAllProgress() {
 
     // Qur'an Dictionary progress
     updateQuranProgress();
-}
 
-function markLetterViewed(letter) {
-    if (!viewedLetters.includes(letter)) {
-        viewedLetters.push(letter);
-        saveLearningProgress();
-        renderLetters();
+    // NEW: Video progress (optional display)
+    const videoProgressBar = document.getElementById('videoProgress');
+    const videoCountSpan = document.getElementById('videoCount');
+    if (videoProgressBar && videoCountSpan && allVideoNames.length) {
+        const totalVideos = allVideoNames.length;
+        const watchedCount = viewedVideos.length;
+        const percent = (watchedCount / totalVideos) * 100;
+        videoProgressBar.style.width = percent + '%';
+        videoCountSpan.innerText = `${watchedCount}/${totalVideos}`;
     }
 }
 
-function markWordViewed(word) {
-    if (!viewedWords.includes(word)) {
-        viewedWords.push(word);
-        saveLearningProgress();
+// ===== VIDEO SECTION WITH PROGRESS & REORDERING =====
+// Generate all video names (same as before)
+let allVideoNames = [];
+
+function generateVideoList() {
+    const videoNames = [
+        "am-ill", "anyway", "are", "explain-to-me", "go-ahead", "have-you-eaten",
+        "have-youfinished", "listen-to-me", "love-for-sake-of-Allah", "may-Allah-cure-you",
+        "no-am-single", "today", "what-are-you-doing-now", "am-learnig", "dont-worry",
+        "how-is-weather-today", "how-ols-are-you", "don't-care", "i-feel-tired", "i-have-changed-my-mind",
+        "i-slept", "i-want-to-eat", "tell-me", "what's-your-name", "are-hungry", "do-love-me",
+        "have-confidence-in-yourself", "i-love-you-so-much", "i-miss-you", "i-prayed", "what-did-you-say",
+        "whatever", "am-happy-to-meet-you", "do-you-love", "i-feel-angry", "i-feel-happy", "i-feel-pain",
+        "i-feel-scared", "i-was-late", "just-as-you-mentioned", "let-us-meet-up", "yes-no",
+        "am-in-a-rush", "am-thinking-about-you", "how-did-this-happen", "i-seek-permission",
+        "i-will-help-you", "make-sure", "seek-permission", "where-do-yo-work", "am-at-the-gym",
+        "am-lonely", "are-you-interested", "be-patient", "employed", "go-out", "kind",
+        "this-is-prohibited", "try-again", "welcome", "what's-the-solution", "collaboration",
+        "i-bought", "one-moment", "work-hard", "you-are-better-than-me", "am-sorry",
+        "i-don't-understand", "oh-Allah-make-us-reach-ramadhan", "strive", "ungrateful",
+        "don't-give-up", "grateful", "have-you-had-breakfast", "he-has-called-the-adhaan",
+        "optimistic", "pessimistic", "time-is-money", "what-do-mean", "arabic-numbers",
+        "can-you-hear-me", "don't-be-arrogant", "enjoy-your-time", "excuse-me", "have-you-had-dinner",
+        "have-you-had-lunch", "i-like-it", "long-sighted", "short-sighted", "this-is-awesome",
+        "am-busy", "am-sleepy", "am-thirsty", "am-travelling", "thanks-for-the-advice",
+        "this-is-difficult", "this-is-important", "this-is-pleasant-news", "what-did-you-drink",
+        "what-did-you-eat", "am-at-ease", "am-from", "am-full-up", "am-worried", "don't-come",
+        "don't-go", "i-arrived", "i-woke-up-late", "where-are-you-from", "where-did-you-go",
+        "you-are-handsome", "am-ready", "are-you-fasting", "eat", "have-you-broken-your-fast",
+        "i-forgot", "i-slept-late", "beard", "i-feel", "i-have-prayed", "no-worries",
+        "you-are-beautiful", "am-tired", "call-me", "don't-be-scared", "shut-up", "thank-you",
+        "where-were-you", "all-because-of-you", "arrogant", "lazy", "please", "understanding",
+        "what's-your-opinion", "whee-are-you", "am-at-the-market", "am-hesitant", "am-late",
+        "have-you-had-sahoor", "this-is-a-disaster", "where-do-you-work", "you-made-me-late",
+        "am-joking", "don't-threaten-me", "my-life", "oh-my-eyes", "oh-my-sweetheart",
+        "will-you-come-with-me", "yes-unfortunately", "sure", "am-waiting-for-you",
+        "don't-be-late", "don't-be-sad", "don't-judge-me", "don't-wait", "no-need-to-argue",
+        "thanks-for-reminding-me", "thanks-for-visiting", "what-are-you-watching", "what-do-you-want",
+        "don't-disturb-me", "don't-procastinate", "enjoy-your-day", "enjoy-your-holiday",
+        "he-is-ignorant", "he-is-stingy", "how-much-do-you-love-me", "sit-down", "stand-up",
+        "where-are-you", "counting-numbers", "days-of-the-week", "don't-waste-my-time",
+        "do-you-have-children", "go", "go-go", "i-have-children", "sit-next-to-me",
+        "i-don't-understand-arabic", "Learn-Arabic-from-scratch-13", "tajweed",
+        "Arabic-Conversations", "Learn-Arabic-from-scratch-12", "Learn-Arabic-from-scratch-11",
+        "memories", "let-me-think", "swimming-pool", "the-weather", "this-is-impossible",
+        "weather-conditions", "well-done", "he-is", "help-me", "how-are-you", "how-much-is-this",
+        "of-course-not", "sure!", "trust-me", "what-are-you-doing", "what-are-you-reading",
+        "what-are-you-writing", "this-is-enough", "Arabic-Alphabet-Pronunciation", "Arabic-Alphabets"
+    ];
+    for (let i = 1; i <= 59; i++) {
+        videoNames.push(`quiz-${i}`);
     }
+    // Remove duplicates by using Set
+    allVideoNames = [...new Set(videoNames)];
+    return allVideoNames;
 }
 
-function markPhraseViewed(phrase) {
-    if (!viewedPhrases.includes(phrase)) {
-        viewedPhrases.push(phrase);
-        saveLearningProgress();
-        renderPhrases();
+function renderVideos() {
+    const container = document.getElementById('videoGrid');
+    if (!container) return;
+
+    // Generate full list if not already generated
+    if (allVideoNames.length === 0) {
+        generateVideoList();
     }
+
+    // Sort: unwatched first, then watched
+    const sortedVideos = [...allVideoNames].sort((a, b) => {
+        const aWatched = viewedVideos.includes(a);
+        const bWatched = viewedVideos.includes(b);
+        if (aWatched === bWatched) return 0;
+        return aWatched ? 1 : -1;   // unwatched (-1) comes before watched (1)
+    });
+
+    const fragment = document.createDocumentFragment();
+    sortedVideos.forEach(name => {
+        const isWatched = viewedVideos.includes(name);
+        const card = document.createElement('div');
+        card.className = 'video-card';
+        const title = name.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+        const description = `Learn Arabic: ${name.replace(/-/g, ' ')}`;
+        const videoUrl = `videos/${name}.mp4`;
+        const videoElem = document.createElement('video');
+        videoElem.controls = true;
+        videoElem.preload = 'none';
+        videoElem.innerHTML = `<source src="${videoUrl}" type="video/mp4">Your browser does not support the video tag.`;
+        
+        // Info div with title, description, and mark button
+        const infoDiv = document.createElement('div');
+        infoDiv.className = 'video-info';
+        infoDiv.innerHTML = `
+            <div class="video-title">${title}</div>
+            <div class="video-desc">${description}</div>
+            <button class="mark-video-btn" data-video="${name}" data-watched="${isWatched}">${isWatched ? '✓ Watched' : '◉ Mark watched'}</button>
+        `;
+        card.appendChild(videoElem);
+        card.appendChild(infoDiv);
+        fragment.appendChild(card);
+    });
+    container.innerHTML = '';
+    container.appendChild(fragment);
+
+    // Attach event listeners to mark buttons
+    document.querySelectorAll('.mark-video-btn').forEach(btn => {
+        btn.addEventListener('click', function(e) {
+            e.stopPropagation();
+            const videoName = this.dataset.video;
+            toggleVideoWatched(videoName);
+        });
+    });
 }
 
-function markConversationViewed(topic) {
-    if (!viewedConversations.includes(topic)) {
-        viewedConversations.push(topic);
-        saveLearningProgress();
+function toggleVideoWatched(videoName) {
+    if (viewedVideos.includes(videoName)) {
+        viewedVideos = viewedVideos.filter(v => v !== videoName);
+    } else {
+        viewedVideos.push(videoName);
     }
+    saveLearningProgress();
+    renderVideos();   // re-render with new order
 }
 
-// ===== TAB SWITCHING =====
-function switchLearningTab(tabId) {
-    document.querySelectorAll('.learning-tabs .tab-btn').forEach(btn => btn.classList.remove('active'));
-    const activeButton = document.querySelector(`.learning-tabs .tab-btn[data-tab="${tabId}"]`);
-    if (activeButton) activeButton.classList.add('active');
-    document.querySelectorAll('.learning-tab-content').forEach(tab => tab.classList.remove('active'));
-    const selectedTab = document.getElementById(`${tabId}-tab`);
-    if (selectedTab) selectedTab.classList.add('active');
-    currentLearningTab = tabId;
+function resetVideoProgress() {
+    if (confirm('Are you sure you want to reset all video progress? This will mark all videos as unlearned.')) {
+        viewedVideos = [];
+        saveLearningProgress();
+        renderVideos();
+        showFeedback('Video progress has been reset.', 'success');
+    }
 }
 
 // ===== LETTERS SECTION =====
@@ -704,83 +812,6 @@ function updateQuranProgress() {
     if (quranCountSpan) quranCountSpan.innerText = `${viewedCount}/${total}`;
 }
 
-// ===== VIDEOS SECTION =====
-function renderVideos() {
-    const container = document.getElementById('videoGrid');
-    if (!container) return;
-
-    const videoNames = [
-        "am-ill", "anyway", "are", "explain-to-me", "go-ahead", "have-you-eaten",
-        "have-youfinished", "listen-to-me", "love-for-sake-of-Allah", "may-Allah-cure-you",
-        "no-am-single", "today", "what-are-you-doing-now", "am-learnig", "dont-worry",
-        "how-is-weather-today", "how-ols-are-you", "don't-care", "i-feel-tired", "i-have-changed-my-mind",
-        "i-slept", "i-want-to-eat", "tell-me", "what's-your-name", "are-hungry", "do-love-me",
-        "have-confidence-in-yourself", "i-love-you-so-much", "i-miss-you", "i-prayed", "what-did-you-say",
-        "whatever", "am-happy-to-meet-you", "do-you-love", "i-feel-angry", "i-feel-happy", "i-feel-pain",
-        "i-feel-scared", "i-was-late", "just-as-you-mentioned", "let-us-meet-up", "yes-no",
-        "am-in-a-rush", "am-thinking-about-you", "how-did-this-happen", "i-seek-permission",
-        "i-will-help-you", "make-sure", "seek-permission", "where-do-yo-work", "am-at-the-gym",
-        "am-lonely", "are-you-interested", "be-patient", "employed", "go-out", "kind",
-        "this-is-prohibited", "try-again", "welcome", "what's-the-solution", "collaboration",
-        "i-bought", "one-moment", "work-hard", "you-are-better-than-me", "am-sorry",
-        "i-don't-understand", "oh-Allah-make-us-reach-ramadhan", "strive", "ungrateful",
-        "don't-give-up", "grateful", "have-you-had-breakfast", "he-has-called-the-adhaan",
-        "optimistic", "pessimistic", "time-is-money", "what-do-mean", "arabic-numbers",
-        "can-you-hear-me", "don't-be-arrogant", "enjoy-your-time", "excuse-me", "have-you-had-dinner",
-        "have-you-had-lunch", "i-like-it", "long-sighted", "short-sighted", "this-is-awesome",
-        "am-busy", "am-sleepy", "am-thirsty", "am-travelling", "thanks-for-the-advice",
-        "this-is-difficult", "this-is-important", "this-is-pleasant-news", "what-did-you-drink",
-        "what-did-you-eat", "am-at-ease", "am-from", "am-full-up", "am-worried", "don't-come",
-        "don't-go", "i-arrived", "i-woke-up-late", "where-are-you-from", "where-did-you-go",
-        "you-are-handsome", "am-ready", "are-you-fasting", "eat", "have-you-broken-your-fast",
-        "i-forgot", "i-slept-late", "beard", "i-feel", "i-have-prayed", "no-worries",
-        "you-are-beautiful", "am-tired", "call-me", "don't-be-scared", "shut-up", "thank-you",
-        "where-were-you", "all-because-of-you", "arrogant", "lazy", "please", "understanding",
-        "what's-your-opinion", "whee-are-you", "am-at-the-market", "am-hesitant", "am-late",
-        "have-you-had-sahoor", "this-is-a-disaster", "where-do-you-work", "you-made-me-late",
-        "am-joking", "don't-threaten-me", "my-life", "oh-my-eyes", "oh-my-sweetheart",
-        "will-you-come-with-me", "yes-unfortunately", "sure", "am-waiting-for-you",
-        "don't-be-late", "don't-be-sad", "don't-judge-me", "don't-wait", "no-need-to-argue",
-        "thanks-for-reminding-me", "thanks-for-visiting", "what-are-you-watching", "what-do-you-want",
-        "don't-disturb-me", "don't-procastinate", "enjoy-your-day", "enjoy-your-holiday",
-        "he-is-ignorant", "he-is-stingy", "how-much-do-you-love-me", "sit-down", "stand-up",
-        "where-are-you", "counting-numbers", "days-of-the-week", "don't-waste-my-time",
-        "do-you-have-children", "go", "go-go", "i-have-children", "sit-next-to-me",
-        "i-don't-understand-arabic", "Learn-Arabic-from-scratch-13", "tajweed",
-        "Arabic-Conversations", "Learn-Arabic-from-scratch-12", "Learn-Arabic-from-scratch-11",
-        "memories", "let-me-think", "swimming-pool", "the-weather", "this-is-impossible",
-        "weather-conditions", "well-done", "he-is", "help-me", "how-are-you", "how-much-is-this",
-        "of-course-not", "sure!", "trust-me", "what-are-you-doing", "what-are-you-reading",
-        "what-are-you-writing", "this-is-enough", "Arabic-Alphabet-Pronunciation", "Arabic-Alphabets"
-    ];
-
-    for (let i = 1; i <= 59; i++) {
-        videoNames.push(`quiz-${i}`);
-    }
-    const uniqueNames = [...new Set(videoNames)];
-
-    const fragment = document.createDocumentFragment();
-    uniqueNames.forEach(name => {
-        const card = document.createElement('div');
-        card.className = 'video-card';
-        const title = name.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
-        const description = `Learn Arabic: ${name.replace(/-/g, ' ')}`;
-        const videoUrl = `videos/${name}.mp4`;
-        const videoElem = document.createElement('video');
-        videoElem.controls = true;
-        videoElem.preload = 'none';
-        videoElem.innerHTML = `<source src="${videoUrl}" type="video/mp4">Your browser does not support the video tag.`;
-        const infoDiv = document.createElement('div');
-        infoDiv.className = 'video-info';
-        infoDiv.innerHTML = `<div class="video-title">${title}</div><div class="video-desc">${description}</div>`;
-        card.appendChild(videoElem);
-        card.appendChild(infoDiv);
-        fragment.appendChild(card);
-    });
-    container.innerHTML = '';
-    container.appendChild(fragment);
-}
-
 // ===== QUIZ SECTION =====
 function loadRandomQuizQuestion() {
     if (!window.arabicLearningData || !window.arabicLearningData.allQuizQuestions) {
@@ -925,13 +956,11 @@ function updateQuizStats() {
     if (scoreSpan) scoreSpan.innerText = score + '%';
 }
 
-// ===== SEARCH AND FILTER =====
+// ===== UTILITY FUNCTIONS =====
 function setupSearchListeners() {
-    // Most listeners are attached in attachEventListeners()
-    // This function is kept for compatibility
+    // Already handled in attachEventListeners
 }
 
-// ===== UTILITY FUNCTIONS =====
 function showErrorMessage() {
     const containers = ['lettersGrid', 'wordsGrid', 'phrasesList', 'sentencesGrid', 'conversationDialogue'];
     containers.forEach(id => {
@@ -972,6 +1001,36 @@ function shuffleArray(array) {
     return array;
 }
 
+function markLetterViewed(letter) {
+    if (!viewedLetters.includes(letter)) {
+        viewedLetters.push(letter);
+        saveLearningProgress();
+        renderLetters();
+    }
+}
+
+function markWordViewed(word) {
+    if (!viewedWords.includes(word)) {
+        viewedWords.push(word);
+        saveLearningProgress();
+    }
+}
+
+function markPhraseViewed(phrase) {
+    if (!viewedPhrases.includes(phrase)) {
+        viewedPhrases.push(phrase);
+        saveLearningProgress();
+        renderPhrases();
+    }
+}
+
+function markConversationViewed(topic) {
+    if (!viewedConversations.includes(topic)) {
+        viewedConversations.push(topic);
+        saveLearningProgress();
+    }
+}
+
 // ===== EXPORT FUNCTIONS TO GLOBAL SCOPE =====
 window.switchLearningTab = switchLearningTab;
 window.checkWriting = checkWriting;
@@ -995,5 +1054,7 @@ window.nextQuizQuestion = nextQuizQuestion;
 window.filterQuranDictionary = filterQuranDictionary;
 window.showQuranWordDetails = showQuranWordDetails;
 window.renderVideos = renderVideos;
+window.toggleVideoWatched = toggleVideoWatched;     // allow inline onclick if needed
+window.resetVideoProgress = resetVideoProgress;
 
-console.log('✅ Arabic learning module ready!');
+console.log('✅ Arabic learning module ready (with video progress tracking and reordering)!');

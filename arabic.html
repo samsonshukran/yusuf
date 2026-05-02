@@ -17,6 +17,30 @@
         .learning-tab-content.active {
             display: block;
         }
+        /* Additional styles for video progress bar and reset button */
+        .videos-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+        #resetVideoProgress {
+            background: #facc1520;
+            border: 1px solid #facc1540;
+            color: #facc15;
+            padding: 0.4rem 1rem;
+            border-radius: 30px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            transition: 0.2s;
+        }
+        #resetVideoProgress:hover {
+            background: #facc15;
+            color: #0f172a;
+            border-color: #facc15;
+        }
     </style>
 </head>
 <body>
@@ -40,7 +64,7 @@
                 <p class="arabic-subtitle">Master the language of the Qur'an step by step</p>
             </div>
 
-            <!-- Progress Bar -->
+            <!-- Progress Bar (added video progress) -->
             <div class="learning-progress">
                 <div class="progress-item">
                     <span class="progress-label">Letters</span>
@@ -66,6 +90,12 @@
                     <span class="progress-label">Qur'an Dictionary</span>
                     <div class="progress-bar-container"><div class="progress-bar-fill" id="quranProgress" style="width: 0%"></div></div>
                     <span class="progress-count" id="quranCount">0/0</span>
+                </div>
+                <!-- New: Video Progress -->
+                <div class="progress-item">
+                    <span class="progress-label">Videos</span>
+                    <div class="progress-bar-container"><div class="progress-bar-fill" id="videoProgress" style="width: 0%"></div></div>
+                    <span class="progress-count" id="videoCount">0/0</span>
                 </div>
             </div>
 
@@ -242,6 +272,10 @@
                 <div class="section-header">
                     <h3>Arabic Learning Videos · فيديوهات تعليمية</h3>
                     <p class="section-subtitle">Watch and learn with video lessons</p>
+                    <!-- New: Reset video progress button -->
+                    <div class="videos-header">
+                        <button id="resetVideoProgress">↻ Reset video progress</button>
+                    </div>
                 </div>
                 <div class="video-grid" id="videoGrid"><div class="loading-spinner">Loading videos...</div></div>
             </div>
